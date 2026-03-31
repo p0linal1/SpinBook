@@ -10,12 +10,27 @@ export function formatCurrency(value: number, currency = "USD") {
   }).format(value);
 }
 
-export function formatDate(value: string) {
+export function formatDate(value: string, format?: string) {
+  const date = new Date(value);
+  
+  if (format === 'ddd') {
+    return new Intl.DateTimeFormat("en-US", {
+      weekday: "short",
+    }).format(date);
+  }
+  
+  if (format === 'MMM DD') {
+    return new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+    }).format(date);
+  }
+  
   return new Intl.DateTimeFormat("en-US", {
     month: "short",
     day: "numeric",
     year: "numeric",
-  }).format(new Date(value));
+  }).format(date);
 }
 
 export function initials(name: string) {

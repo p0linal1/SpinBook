@@ -3,20 +3,54 @@
 @tailwind utilities;
 
 :root {
-  --background: #0a0a0a;
-  --foreground: #f5f7f7;
-  --surface: #141414;
-  --surface-low: #1b1b1b;
-  --surface-high: #222222;
-  --surface-ink: #2c2c2c;
+  /* Core colors */
+  --background: #0e0e0e;
+  --foreground: #ffffff;
+  --surface: #1a1919;
+  --surface-low: #131313;
+  --surface-high: #201f1f;
+  --surface-ink: #262626;
+  --surface-bright: #2c2c2c;
+  --surface-container-lowest: #000000;
+  --surface-container-highest: #262626;
+  
+  /* Brand colors */
   --primary: #00ff87;
+  --primary-container: #00fd86;
+  --primary-dim: #00ed7d;
+  --on-primary: #006531;
+  --on-primary-container: #005b2c;
+  
   --secondary: #be82ff;
+  --secondary-container: #6b12b9;
+  --secondary-dim: #be82ff;
+  --on-secondary: #32005c;
+  --on-secondary-container: #e8ceff;
+  
   --tertiary: #ffa44c;
-  --outline: rgba(255, 255, 255, 0.12);
-  --muted: #9ea4a6;
+  --tertiary-container: #fd9000;
+  --tertiary-dim: #ea8400;
+  --on-tertiary: #552d00;
+  --on-tertiary-container: #462400;
+  
+  /* UI colors */
+  --outline: #777575;
+  --outline-variant: #494847;
+  --muted: #adaaaa;
+  --on-surface: #ffffff;
+  --on-surface-variant: #adaaaa;
+  --on-background: #ffffff;
+  
+  /* Status colors */
   --success: #00ff87;
   --warning: #ffa44c;
-  --danger: #ff6b70;
+  --danger: #ff716c;
+  --error: #ff716c;
+  --error-container: #9f0519;
+  --on-error: #490006;
+  --on-error-container: #ffa8a3;
+  
+  /* Typography */
   --font-display: "Space Grotesk", "Avenir Next", "Segoe UI", sans-serif;
   --font-body: "Inter", "Avenir Next", "Segoe UI", sans-serif;
   --font-mono: "JetBrains Mono", "SFMono-Regular", "Menlo", monospace;
@@ -35,7 +69,7 @@ body {
   min-height: 100vh;
   background:
     radial-gradient(circle at top, rgba(0, 255, 135, 0.08), transparent 20%),
-    linear-gradient(180deg, #0a0a0a 0%, #111 100%);
+    linear-gradient(180deg, var(--background) 0%, #111 100%);
   color: var(--foreground);
   font-family: var(--font-body), sans-serif;
 }
@@ -59,11 +93,19 @@ textarea {
 
 @layer components {
   .panel {
-    @apply rounded-2xl border border-white/10 bg-surface shadow-panel backdrop-blur;
+    @apply rounded-xl border border-white/10 bg-surface shadow-panel backdrop-blur;
   }
 
   .panel-muted {
-    @apply rounded-2xl border border-white/5 bg-surface-low;
+    @apply rounded-xl border border-white/5 bg-surface-low;
+  }
+
+  .glass-card {
+    @apply bg-surface backdrop-blur-md border border-white/5;
+  }
+
+  .neon-glow:hover {
+    @apply shadow-[0_0_40px_rgba(0,255,135,0.04)] border-primary/40 transition-all duration-300;
   }
 
   .eyebrow {
@@ -76,5 +118,17 @@ textarea {
 
   .status-dot {
     @apply inline-block h-2 w-2 rounded-full;
+  }
+  
+  .kinetic-gradient {
+    @apply bg-gradient-to-br from-primary to-primary-container text-on-primary;
+  }
+  
+  .ticker-wrap {
+    @apply overflow-hidden whitespace-nowrap;
+  }
+  
+  .ticker {
+    @apply inline-block animate-ticker;
   }
 }
