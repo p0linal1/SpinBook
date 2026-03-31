@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-tertiary-fixed-variant": "#592f00",
+              "on-primary": "#006531",
+              "on-secondary": "#32005c",
+              "on-error-container": "#ffa8a3",
+              "on-surface": "#ffffff",
+              "surface-container-lowest": "#000000",
+              "secondary-fixed-dim": "#dab5ff",
+              "tertiary-fixed": "#ff9727",
+              "tertiary-dim": "#ea8400",
+              "primary-dim": "#00ed7d",
+              "on-surface-variant": "#adaaaa",
+              "inverse-primary": "#006e37",
+              "surface-container-highest": "#262626",
+              "error": "#ff716c",
+              "secondary-dim": "#be82ff",
+              "secondary-container": "#6b12b9",
+              "surface-container-low": "#131313",
+              "surface-dim": "#0e0e0e",
+              "surface-container-high": "#201f1f",
+              "primary": "#a4ffb9",
+              "on-tertiary-container": "#462400",
+              "tertiary": "#ffa44c",
+              "surface-container": "#1a1919",
+              "outline": "#777575",
+              "on-primary-fixed": "#004620",
+              "on-tertiary-fixed": "#281200",
+              "surface-bright": "#2c2c2c",
+              "inverse-on-surface": "#565554",
+              "surface": "#0e0e0e",
+              "primary-fixed-dim": "#00ed7d",
+              "on-error": "#490006",
+              "primary-fixed": "#00fd86",
+              "inverse-surface": "#fcf8f8",
+              "on-primary-container": "#005b2c",
+              "tertiary-fixed-dim": "#f18900",
+              "secondary": "#be82ff",
+              "tertiary-container": "#fd9000",
+              "primary-container": "#00fd86",
+              "on-secondary-fixed-variant": "#711dbe",
+              "error-container": "#9f0519",
+              "on-secondary-fixed": "#4d008b",
+              "on-background": "#ffffff",
+              "outline-variant": "#494847",
+              "surface-variant": "#262626",
+              "error-dim": "#d7383b",
+              "on-secondary-container": "#e8ceff",
+              "background": "#0e0e0e",
+              "on-tertiary": "#552d00",
+              "on-primary-fixed-variant": "#006632",
+              "surface-tint": "#a4ffb9",
+              "secondary-fixed": "#e3c6ff"
+            },
+            fontFamily: {
+              "headline": ["Space Grotesk"],
+              "body": ["Inter"],
+              "label": ["Space Grotesk"],
+              "mono": ["JetBrains Mono"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #0e0e0e;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+        }
+        .kinetic-gradient {
+            background: linear-gradient(135deg, #a4ffb9 0%, #00fd86 100%);
+        }
+        .glass-panel {
+            background: rgba(38, 38, 38, 0.4);
+            backdrop-filter: blur(20px);
+        }
+        .mono-data {
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen pb-24 md:pb-0">
+<!-- TopAppBar -->
+<header class="bg-[#0e0e0e]/90 backdrop-blur-xl docked full-width top-0 z-50 sticky">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-[1440px] mx-auto">
+<div class="flex items-center gap-8">
+<span class="font-mono text-[#00FF87] font-bold tracking-tighter text-xl">SPINBOOK</span>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-[#00FF87] border-b-2 border-[#00FF87] pb-1 font-['Space_Grotesk'] tracking-tight Headlines transition-colors duration-200" href="#">Gigs</a>
+<a class="text-neutral-400 font-medium font-['Space_Grotesk'] tracking-tight Headlines hover:text-[#00FF87] transition-colors duration-200" href="#">Bookings</a>
+<a class="text-neutral-400 font-medium font-['Space_Grotesk'] tracking-tight Headlines hover:text-[#00FF87] transition-colors duration-200" href="#">Messages</a>
+<a class="text-neutral-400 font-medium font-['Space_Grotesk'] tracking-tight Headlines hover:text-[#00FF87] transition-colors duration-200" href="#">Profile</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<span class="hidden md:block text-xs font-mono text-secondary uppercase tracking-widest bg-secondary-container/20 px-3 py-1 rounded-full">DJ/Promoter</span>
+<button class="text-on-surface-variant hover:text-[#00FF87] transition-all active:opacity-80 scale-95">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
+<img alt="User profile avatar" class="w-full h-full object-cover" data-alt="close-up portrait of a stylish DJ with neon green and purple ambient lighting on their face and high-tech headphones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDoDXFhQIFNhoASgFd33xFugbQBSa_Gt4BEYU6T6aaZQBD2L6Of_0L4eodRW7c9Il1sAPhofT9NNwad8-3NQfl6qBfUqVkE6YCRrcYDUKsb0iAzCbXDDQoRlUksQkgOHvuES1S8pA9Hchc_5n1ENFEqwxQ-EREyYrg2A6kW5FONlkVs2iZcldxM42F6isBdVP8P6S0yw701FRdmqFx-oA6XHenbEjhahPkHRoJLsosUNYPO3Ht5CXZxU8cGPc615zH945p0H2Z0bdM"/>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-[1440px] mx-auto px-6 py-8">
+<!-- Live Ticker (Custom industrial component) -->
+<div class="w-full overflow-hidden whitespace-nowrap bg-surface-container-low py-2 mb-10 border-y border-outline-variant/10">
+<div class="inline-block animate-marquee">
+<span class="mono-data text-[10px] uppercase tracking-[0.2em] text-primary px-8">LIVE OPPORTUNITIES: 142 OPEN GIGS</span>
+<span class="mono-data text-[10px] uppercase tracking-[0.2em] text-on-surface-variant px-8">BERLIN AVG: €450/SET</span>
+<span class="mono-data text-[10px] uppercase tracking-[0.2em] text-secondary px-8">TECHNO TUESDAY RECRUITING</span>
+<span class="mono-data text-[10px] uppercase tracking-[0.2em] text-primary px-8">NEW YORK: 12 SLOTS ADDED</span>
+<span class="mono-data text-[10px] uppercase tracking-[0.2em] text-tertiary px-8">PEAK SEASON STARTING JUNE 01</span>
+</div>
+</div>
+<!-- Stats Section -->
+<section class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+<div class="bg-surface-container-low p-6 rounded-lg border-l-2 border-primary group hover:bg-surface-container-high transition-all">
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant mb-2">Open Gigs</p>
+<h3 class="mono-data text-3xl font-bold text-primary">1,204</h3>
+<div class="mt-2 text-[10px] mono-data text-primary-dim">+12% vs last week</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-lg border-l-2 border-secondary group hover:bg-surface-container-high transition-all">
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant mb-2">Avg. Pay/Night</p>
+<h3 class="mono-data text-3xl font-bold text-secondary">€580</h3>
+<div class="mt-2 text-[10px] mono-data text-on-surface-variant">Standard 4hr set</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-lg border-l-2 border-tertiary group hover:bg-surface-container-high transition-all">
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant mb-2">Fill Rate</p>
+<h3 class="mono-data text-3xl font-bold text-tertiary">94%</h3>
+<div class="mt-2 text-[10px] mono-data text-on-surface-variant">High demand tonight</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-lg border-l-2 border-white/20 group hover:bg-surface-container-high transition-all">
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant mb-2">Your Applications</p>
+<h3 class="mono-data text-3xl font-bold text-on-surface">12</h3>
+<div class="mt-2 text-[10px] mono-data text-primary-dim">3 Reviewing</div>
+</div>
+</section>
+<!-- Filter Bar -->
+<section class="flex flex-col md:flex-row gap-4 items-end mb-12 bg-surface-container-low/50 p-6 rounded-xl border border-outline-variant/10">
+<div class="w-full md:w-auto flex-1 grid grid-cols-1 md:grid-cols-4 gap-4">
+<div class="space-y-2">
+<label class="text-[10px] uppercase tracking-widest text-on-surface-variant mono-data">City</label>
+<select class="w-full bg-surface-container-high border-none rounded-lg text-sm p-3 focus:ring-1 focus:ring-primary">
+<option>Berlin, DE</option>
+<option>London, UK</option>
+<option>Ibiza, ES</option>
+</select>
+</div>
+<div class="space-y-2">
+<label class="text-[10px] uppercase tracking-widest text-on-surface-variant mono-data">Genre</label>
+<div class="flex flex-wrap gap-2 p-2 bg-surface-container-high rounded-lg min-h-[44px]">
+<span class="bg-secondary/20 text-secondary text-[10px] px-2 py-1 rounded-full border border-secondary/30">Techno</span>
+<span class="bg-secondary/20 text-secondary text-[10px] px-2 py-1 rounded-full border border-secondary/30">House</span>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-[10px] uppercase tracking-widest text-on-surface-variant mono-data">Date</label>
+<input class="w-full bg-surface-container-high border-none rounded-lg text-sm p-3 focus:ring-1 focus:ring-primary text-on-surface-variant" type="date"/>
+</div>
+<div class="space-y-2">
+<label class="text-[10px] uppercase tracking-widest text-on-surface-variant mono-data">Pay Range</label>
+<div class="flex items-center gap-2">
+<input class="w-full bg-surface-container-high border-none rounded-lg text-sm p-3 focus:ring-1 focus:ring-primary mono-data" placeholder="€200" type="text"/>
+<span class="text-outline">/</span>
+<input class="w-full bg-surface-container-high border-none rounded-lg text-sm p-3 focus:ring-1 focus:ring-primary mono-data" placeholder="€1k+" type="text"/>
+</div>
+</div>
+</div>
+<button class="bg-surface-container-highest px-6 py-3 rounded-lg text-sm font-medium hover:bg-surface-bright transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">sort</span>
+                Sort: Recent
+            </button>
+</section>
+<!-- Main Content: Gig Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Gig Card 1 -->
+<div class="bg-surface-container group rounded-xl overflow-hidden border border-outline-variant/10 hover:border-primary/30 transition-all flex flex-col">
+<div class="h-48 relative overflow-hidden">
+<img alt="Neon club visual" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="underground techno club interior with dark shadows, intense green laser beams, and abstract light installations" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUuF4uZdpq6i00jSThoWTSZc2D1QqXJy5kobX3eKgf0sVxHNzBVNw1a13gMnfhCmPpvkoYPEETQMYEU8Zt1UVVi4Z63USYp3CecQZPFuTCVFyrbCLhJFaRLPI5H5LpgMhweeHEPpHAarf4sRqAHJ28HDGqoV3PEH4lWH3Yofm-tNi5Xd5TO7Vpf-Y9FGPiHhNzrOiyB-mBSEF886Ab_l8KOi351cs8oQNWJVUCGH98MvJrNQvTz2Gw37hVM927oK9jImOXlk0Jl_Y"/>
+<div class="absolute top-4 left-4 bg-primary text-on-primary text-[10px] font-bold px-2 py-1 rounded-sm uppercase tracking-tighter">OPEN</div>
+<div class="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+<div class="flex flex-wrap gap-1">
+<span class="bg-secondary text-on-secondary text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Techno</span>
+<span class="bg-secondary text-on-secondary text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Acid</span>
+</div>
+</div>
+</div>
+<div class="p-6 flex-1 flex flex-col">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h4 class="font-headline text-xl font-bold tracking-tight text-on-surface">SOLARIS NIGHTS</h4>
+<p class="text-on-surface-variant text-sm flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-sm">location_on</span>
+                                Tresor, Berlin
+                            </p>
+</div>
+<div class="text-right">
+<p class="mono-data text-xs text-on-surface-variant">FRI</p>
+<p class="mono-data text-lg font-bold text-primary">MAY 24</p>
+</div>
+</div>
+<div class="space-y-3 mb-6">
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/5">
+<span class="text-xs text-on-surface-variant uppercase tracking-widest">Main Slot</span>
+<span class="mono-data text-primary-container font-bold">€650.00</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/5">
+<span class="text-xs text-on-surface-variant uppercase tracking-widest">Warm-Up</span>
+<span class="mono-data text-primary-container font-bold">€300.00</span>
+</div>
+</div>
+<div class="mt-auto pt-4 flex items-center justify-between border-t border-outline-variant/10">
+<span class="text-[10px] text-on-surface-variant mono-data uppercase">8 Applicants</span>
+<button class="kinetic-gradient text-on-primary px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest flex items-center gap-2 group-hover:shadow-[0_0_20px_rgba(0,255,135,0.3)] transition-all">
+                            Apply
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Gig Card 2 -->
+<div class="bg-surface-container group rounded-xl overflow-hidden border border-outline-variant/10 hover:border-primary/30 transition-all flex flex-col">
+<div class="h-48 relative overflow-hidden">
+<img alt="Warehouse event visual" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="dark industrial warehouse party with red and blue strobe lights and a large DJ booth setup" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3byE6ydVReDvquKUcFjOxrBV9giK3HYM3KAA2HWvoZ3v-287jHpGV06zc0tiOLS0HOs1StngSADrgthkeXxh2hHP7AOGG02EnukH4KTQeVSByDT8DfgOVLIx8qP3tlRorf3bvi7wEtuGa7pF87EvC17oJJSODaC8tUUBETgpmmKJBPMPTQcqjt1Z50O0l80Hvst0fFeFsfdH75vyMqk3HpgTRpTpsekPPWGfG4cnE5mYUpAyziVa_bTehmPXEYZlY1oQD15pe23I"/>
+<div class="absolute top-4 left-4 bg-primary text-on-primary text-[10px] font-bold px-2 py-1 rounded-sm uppercase tracking-tighter">OPEN</div>
+<div class="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+<div class="flex flex-wrap gap-1">
+<span class="bg-secondary text-on-secondary text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Industrial</span>
+</div>
+</div>
+</div>
+<div class="p-6 flex-1 flex flex-col">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h4 class="font-headline text-xl font-bold tracking-tight text-on-surface">KINETIC PULSE</h4>
+<p class="text-on-surface-variant text-sm flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-sm">location_on</span>
+                                Kraftwerk, Berlin
+                            </p>
+</div>
+<div class="text-right">
+<p class="mono-data text-xs text-on-surface-variant">SAT</p>
+<p class="mono-data text-lg font-bold text-primary">MAY 25</p>
+</div>
+</div>
+<div class="space-y-3 mb-6">
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/5">
+<span class="text-xs text-on-surface-variant uppercase tracking-widest">Peak Hour</span>
+<span class="mono-data text-primary-container font-bold">€800.00</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/5">
+<span class="text-xs text-on-surface-variant uppercase tracking-widest">Closing</span>
+<span class="mono-data text-primary-container font-bold">€450.00</span>
+</div>
+</div>
+<div class="mt-auto pt-4 flex items-center justify-between border-t border-outline-variant/10">
+<span class="text-[10px] text-on-surface-variant mono-data uppercase">14 Applicants</span>
+<button class="kinetic-gradient text-on-primary px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest flex items-center gap-2 transition-all">
+                            Apply
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Gig Card 3 -->
+<div class="bg-surface-container group rounded-xl overflow-hidden border border-outline-variant/10 hover:border-primary/30 transition-all flex flex-col">
+<div class="h-48 relative overflow-hidden">
+<img alt="Lounge event visual" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="sophisticated minimalist lounge with amber mood lighting and high-end audio equipment in the foreground" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFKWnHqGtCjqnPsOLTb-Tld-zykuXUTQchGSAJeRYyf7Ed8d5OYdnWkSfuSi1GSdM3gMF_HVewOwqzFRpuopic3ZxgUAL1iZ3qrMm7bCp9a6NvAAudKgUAgpd365P1cqwNfapaLcEXXvog5-gWzuY6gJycmK0c2r27l61oeYlymmVezF6s8yXWODW87surBTBRyYUGJF80ZrbFDjc6MKJUxlieFR-m8TAGne46H5J4vqHD12SLoETTUnHGOkjBVY87KSLA9tG-xyw"/>
+<div class="absolute top-4 left-4 bg-primary text-on-primary text-[10px] font-bold px-2 py-1 rounded-sm uppercase tracking-tighter">OPEN</div>
+<div class="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+<div class="flex flex-wrap gap-1">
+<span class="bg-secondary text-on-secondary text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Deep House</span>
+<span class="bg-secondary text-on-secondary text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">Melodic</span>
+</div>
+</div>
+</div>
+<div class="p-6 flex-1 flex flex-col">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h4 class="font-headline text-xl font-bold tracking-tight text-on-surface">HORIZON SETS</h4>
+<p class="text-on-surface-variant text-sm flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-sm">location_on</span>
+                                Watergate, Berlin
+                            </p>
+</div>
+<div class="text-right">
+<p class="mono-data text-xs text-on-surface-variant">SUN</p>
+<p class="mono-data text-lg font-bold text-primary">MAY 26</p>
+</div>
+</div>
+<div class="space-y-3 mb-6">
+<div class="flex justify-between items-center py-2 border-b border-outline-variant/5">
+<span class="text-xs text-on-surface-variant uppercase tracking-widest">All Night</span>
+<span class="mono-data text-primary-container font-bold">€400.00</span>
+</div>
+</div>
+<div class="mt-auto pt-4 flex items-center justify-between border-t border-outline-variant/10">
+<span class="text-[10px] text-on-surface-variant mono-data uppercase">3 Applicants</span>
+<button class="kinetic-gradient text-on-primary px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest flex items-center gap-2 transition-all">
+                            Apply
+                            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<footer class="md:hidden fixed bottom-0 left-0 w-full z-50 bg-[#0e0e0e]/95 backdrop-blur-md border-t border-white/5 shadow-[0_-4px_20px_rgba(0,255,135,0.05)] h-16 px-4 flex justify-around items-center">
+<a class="flex flex-col items-center justify-center text-[#00FF87] font-bold" href="#">
+<span class="material-symbols-outlined" data-icon="queue_music">queue_music</span>
+<span class="font-mono text-[10px] uppercase tracking-widest mt-1">Gigs</span>
+</a>
+<a class="flex flex-col items-center justify-center text-neutral-500 hover:text-[#00FF87] transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="confirmation_number">confirmation_number</span>
+<span class="font-mono text-[10px] uppercase tracking-widest mt-1">Bookings</span>
+</a>
+<a class="flex flex-col items-center justify-center text-neutral-500 hover:text-[#00FF87] transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="chat_bubble">chat_bubble</span>
+<span class="font-mono text-[10px] uppercase tracking-widest mt-1">Messages</span>
+</a>
+<a class="flex flex-col items-center justify-center text-neutral-500 hover:text-[#00FF87] transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+<span class="font-mono text-[10px] uppercase tracking-widest mt-1">Profile</span>
+</a>
+</footer>
+</body></html>

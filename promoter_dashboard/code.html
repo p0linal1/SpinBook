@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+
+<html class="dark"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;family=Roboto+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-tertiary-fixed-variant": "#592f00",
+                        "on-primary": "#006531",
+                        "on-secondary": "#32005c",
+                        "on-error-container": "#ffa8a3",
+                        "on-surface": "#ffffff",
+                        "surface-container-lowest": "#000000",
+                        "secondary-fixed-dim": "#dab5ff",
+                        "tertiary-fixed": "#ff9727",
+                        "tertiary-dim": "#ea8400",
+                        "primary-dim": "#00ed7d",
+                        "on-surface-variant": "#adaaaa",
+                        "inverse-primary": "#006e37",
+                        "surface-container-highest": "#262626",
+                        "error": "#ff716c",
+                        "secondary-dim": "#be82ff",
+                        "secondary-container": "#6b12b9",
+                        "surface-container-low": "#131313",
+                        "surface-dim": "#0e0e0e",
+                        "surface-container-high": "#201f1f",
+                        "primary": "#a4ffb9",
+                        "on-tertiary-container": "#462400",
+                        "tertiary": "#ffa44c",
+                        "surface-container": "#1a1919",
+                        "outline": "#777575",
+                        "on-primary-fixed": "#004620",
+                        "on-tertiary-fixed": "#281200",
+                        "surface-bright": "#2c2c2c",
+                        "inverse-on-surface": "#565554",
+                        "surface": "#0e0e0e",
+                        "primary-fixed-dim": "#00ed7d",
+                        "on-error": "#490006",
+                        "primary-fixed": "#00fd86",
+                        "inverse-surface": "#fcf8f8",
+                        "on-primary-container": "#005b2c",
+                        "tertiary-fixed-dim": "#f18900",
+                        "secondary": "#be82ff",
+                        "tertiary-container": "#fd9000",
+                        "primary-container": "#00fd86",
+                        "on-secondary-fixed-variant": "#711dbe",
+                        "error-container": "#9f0519",
+                        "on-secondary-fixed": "#4d008b",
+                        "on-background": "#ffffff",
+                        "outline-variant": "#494847",
+                        "surface-variant": "#262626",
+                        "error-dim": "#d7383b",
+                        "on-secondary-container": "#e8ceff",
+                        "background": "#0e0e0e",
+                        "on-tertiary": "#552d00",
+                        "on-primary-fixed-variant": "#006632",
+                        "surface-tint": "#a4ffb9",
+                        "secondary-fixed": "#e3c6ff"
+                    },
+                    fontFamily: {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Inter"],
+                        "label": ["Space Grotesk"],
+                        "mono": ["Roboto Mono"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top Navigation Anchor -->
+<header class="bg-[#0e0e0e]/90 backdrop-blur-xl docked full-width top-0 z-50 bg-neutral-900/50 flat no shadows">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-[1440px] mx-auto">
+<div class="flex items-center gap-8">
+<span class="font-mono text-[#00FF87] font-bold tracking-tighter text-xl">SPINBOOK</span>
+<nav class="hidden md:flex gap-6">
+<a class="text-neutral-400 font-medium hover:text-[#00FF87] transition-colors duration-200" href="#">Gigs</a>
+<a class="text-neutral-400 font-medium hover:text-[#00FF87] transition-colors duration-200" href="#">Bookings</a>
+<a class="text-neutral-400 font-medium hover:text-[#00FF87] transition-colors duration-200" href="#">Messages</a>
+<a class="text-neutral-400 font-medium hover:text-[#00FF87] transition-colors duration-200" href="#">Profile</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<span class="hidden sm:inline-block font-mono text-xs text-[#00FF87] bg-primary-container/10 px-2 py-1 rounded border border-[#00FF87]/20 uppercase tracking-widest">DJ/Promoter</span>
+<button class="text-neutral-400 hover:text-[#00FF87] transition-all scale-95 active:opacity-80">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
+<img alt="User profile avatar" class="w-full h-full object-cover" data-alt="Close-up portrait of a stylish promoter with colorful lighting in a dark urban environment, professional photography" src="https://lh3.googleusercontent.com/aida-public/AB6AXuClvYbN6GhAvEOGheh2NGGEoAZMu-o9Z7xoraNDlikbjk2vd02UhjmDOgBE9YhH5sbf36fPXMklDnLJGCqv1gqAh6SKgHpw8yuBBbGIdPaYRHCzbn3gdS3RPW4-Ef7o4rvu4a0_4szIQVAWLOBQSdfKu_04shAdA7PtovVfEB7p8J-WmyuxYE-v5OFJ9IyNi0GpTFihe-jl2ktDKsW5kYjuupzktp6FB1UzUvge2-Co7QhxwX3N-Vq_OsYVP4mGEkdR8guTtrzKW-g"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="max-w-[1440px] mx-auto px-6 pt-24 pb-32">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+<div>
+<h1 class="font-headline text-4xl font-bold tracking-tight text-on-surface">NEON JUNGLE VOL. 4</h1>
+<p class="font-mono text-primary text-sm tracking-widest mt-1 uppercase">SATURDAY // MARCH 24 // THE GRID DISTRICT</p>
+</div>
+<div class="flex gap-2">
+<button class="bg-surface-container-highest text-on-surface px-6 py-2 rounded-lg font-label text-sm font-medium hover:bg-surface-bright transition-all border border-outline-variant/20">
+                    EDIT EVENT
+                </button>
+<button class="bg-gradient-to-br from-primary to-primary-container text-on-primary-container px-6 py-2 rounded-lg font-label text-sm font-bold hover:shadow-[0_0_20px_rgba(0,255,135,0.3)] transition-all">
+                    PUBLISH UPDATES
+                </button>
+</div>
+</div>
+<!-- Dashboard Tabs -->
+<div class="flex border-b border-outline-variant/10 mb-8 overflow-x-auto hide-scrollbar">
+<button class="px-6 py-4 font-headline text-sm font-bold text-primary border-b-2 border-primary whitespace-nowrap">LINEUP</button>
+<button class="px-6 py-4 font-headline text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap">APPLICATIONS <span class="ml-2 font-mono bg-error-container text-white text-[10px] px-1.5 py-0.5 rounded-full">12</span></button>
+<button class="px-6 py-4 font-headline text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap">GUEST LIST</button>
+<button class="px-6 py-4 font-headline text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap">PROMO TRACKER</button>
+<button class="px-6 py-4 font-headline text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap">BUDGET</button>
+<button class="px-6 py-4 font-headline text-sm font-medium text-on-surface-variant hover:text-on-surface transition-colors whitespace-nowrap">RUN OF SHOW</button>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-12 gap-6">
+<!-- Section A: Lineup Timeline (Visual) -->
+<div class="col-span-12 lg:col-span-8 bg-surface-container-low rounded-xl p-6 relative overflow-hidden">
+<div class="flex items-center justify-between mb-6">
+<h2 class="font-headline text-xl font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="timer">timer</span>
+                        LINEUP TIMELINE
+                    </h2>
+<span class="font-mono text-[10px] text-on-surface-variant uppercase">Local Time: 21:42</span>
+</div>
+<div class="relative pt-10 pb-4">
+<!-- Timeline markers -->
+<div class="flex justify-between text-[10px] font-mono text-on-surface-variant absolute top-0 w-full px-1">
+<span>22:00</span>
+<span>23:00</span>
+<span>00:00</span>
+<span>01:00</span>
+<span>02:00</span>
+</div>
+<!-- Time grid lines -->
+<div class="absolute inset-0 top-6 bottom-4 flex justify-between pointer-events-none">
+<div class="w-px bg-outline-variant/20 h-full"></div>
+<div class="w-px bg-outline-variant/20 h-full"></div>
+<div class="w-px bg-outline-variant/20 h-full"></div>
+<div class="w-px bg-outline-variant/20 h-full"></div>
+<div class="w-px bg-outline-variant/20 h-full"></div>
+</div>
+<!-- DJ Slots -->
+<div class="relative h-24 flex items-center">
+<!-- Slot 1 -->
+<div class="absolute left-0 w-[25%] h-16 bg-surface-container-highest border-l-4 border-secondary rounded-r-lg p-3 flex flex-col justify-center hover:bg-surface-bright transition-colors cursor-pointer group">
+<span class="font-headline text-xs font-bold leading-tight group-hover:text-secondary transition-colors">DR. SYNTH</span>
+<span class="font-mono text-[9px] text-on-surface-variant">22:00 - 23:00</span>
+</div>
+<!-- Slot 2 -->
+<div class="absolute left-[25%] w-[35%] h-20 bg-surface-container border-l-4 border-primary rounded-r-lg p-4 flex flex-col justify-center z-10 shadow-xl border border-primary/20">
+<div class="flex items-center gap-2">
+<span class="font-headline text-sm font-bold text-primary">CYBER_PUNK</span>
+<span class="material-symbols-outlined text-[14px] text-primary" data-icon="equalizer">equalizer</span>
+</div>
+<span class="font-mono text-[10px] text-on-surface-variant">23:00 - 00:30</span>
+</div>
+<!-- Slot 3 -->
+<div class="absolute left-[60%] w-[40%] h-16 bg-surface-container-highest border-l-4 border-on-surface-variant rounded-r-lg p-3 flex flex-col justify-center opacity-50 italic">
+<span class="font-headline text-xs font-bold">TBA (OPEN SLOT)</span>
+<span class="font-mono text-[9px]">00:30 - 02:00</span>
+</div>
+</div>
+</div>
+<!-- Waveform Decoration -->
+<div class="absolute bottom-0 left-0 w-full h-8 opacity-10 pointer-events-none">
+<div class="w-full h-full bg-gradient-to-t from-primary to-transparent" style="mask-image: linear-gradient(to right, black 5%, transparent 5%, transparent 10%, black 10%, black 15%, transparent 15%, transparent 20%, black 20%, black 40%, transparent 40%, transparent 45%, black 45%, black 60%)"></div>
+</div>
+</div>
+<!-- Section D: Promo Tracker Visual -->
+<div class="col-span-12 lg:col-span-4 bg-surface-container-low rounded-xl p-6">
+<div class="flex items-center justify-between mb-6">
+<h2 class="font-headline text-xl font-bold">PROMO REACH</h2>
+<span class="material-symbols-outlined text-tertiary" data-icon="trending_up">trending_up</span>
+</div>
+<div class="space-y-4">
+<div class="flex items-end gap-2 h-32">
+<div class="flex-1 bg-surface-container-highest rounded-t-md relative group">
+<div class="absolute bottom-0 w-full bg-secondary h-[45%] rounded-t-md group-hover:brightness-125 transition-all"></div>
+</div>
+<div class="flex-1 bg-surface-container-highest rounded-t-md relative group">
+<div class="absolute bottom-0 w-full bg-primary h-[85%] rounded-t-md group-hover:brightness-125 transition-all"></div>
+</div>
+<div class="flex-1 bg-surface-container-highest rounded-t-md relative group">
+<div class="absolute bottom-0 w-full bg-tertiary h-[60%] rounded-t-md group-hover:brightness-125 transition-all"></div>
+</div>
+<div class="flex-1 bg-surface-container-highest rounded-t-md relative group">
+<div class="absolute bottom-0 w-full bg-primary h-[30%] rounded-t-md group-hover:brightness-125 transition-all"></div>
+</div>
+<div class="flex-1 bg-surface-container-highest rounded-t-md relative group">
+<div class="absolute bottom-0 w-full bg-secondary h-[70%] rounded-t-md group-hover:brightness-125 transition-all"></div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-surface-container-high p-3 rounded-lg">
+<span class="block text-[10px] font-mono text-on-surface-variant uppercase mb-1">Total Clicks</span>
+<span class="block font-headline text-2xl font-bold">2,842</span>
+</div>
+<div class="bg-surface-container-high p-3 rounded-lg">
+<span class="block text-[10px] font-mono text-on-surface-variant uppercase mb-1">RSVPs</span>
+<span class="block font-headline text-2xl font-bold text-primary">156</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Section B: Applications -->
+<div class="col-span-12 lg:col-span-7 bg-surface-container-low rounded-xl p-6">
+<div class="flex items-center justify-between mb-6">
+<h2 class="font-headline text-xl font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="group_add">group_add</span>
+                        PENDING APPLICATIONS
+                    </h2>
+<button class="text-xs font-mono text-primary hover:underline">VIEW ALL 42</button>
+</div>
+<div class="space-y-3">
+<!-- Applicant 1 -->
+<div class="bg-surface-container p-4 rounded-lg flex items-center gap-4 hover:bg-surface-container-high transition-all">
+<img alt="DJ Avatar" class="w-12 h-12 rounded-lg object-cover" data-alt="Close-up of a young male DJ with neon face paint in a high-contrast electronic music setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDby9XTpIWQPDsSOKdjIfAQW48SONVlkUNU8cnkjCdMi8NGS3_Qh1Qr43KEawz5ETri9PYGJ0UGDm2_E3qJAcp5sNbEl9EeCnOEFwCx6ZcFEjiB0uGP8BIQD2J9GZ7Mz7eHBF6n8dJC3s7M0o-iFIN4PLVnwdkVCTU9tV2zs18zuyoCfL6LRsQjXAZbEH2koq7kfsYtZWUKLI5uH6q5x_nt5TCaqzYjUbh48g-f-yRGJjh-_lJkjsKZ_IkBn0HKouytYLjZZT_L16A"/>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<h3 class="font-headline font-bold truncate">LUNA_TEK</h3>
+<div class="bg-tertiary/10 text-tertiary px-1.5 py-0.5 rounded text-[10px] font-mono flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[10px]" data-icon="star" data-weight="fill">star</span> 4.9
+                                </div>
+</div>
+<div class="flex gap-2 mt-1">
+<span class="text-[9px] font-mono bg-secondary/10 text-secondary px-2 py-0.5 rounded-full border border-secondary/20">HARD TECHNO</span>
+<span class="text-[9px] font-mono bg-secondary/10 text-secondary px-2 py-0.5 rounded-full border border-secondary/20">INDUSTRIAL</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="w-8 h-8 rounded-full flex items-center justify-center bg-surface-container-highest text-primary hover:bg-primary hover:text-on-primary transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="play_arrow" data-weight="fill">play_arrow</span>
+</button>
+<button class="w-8 h-8 rounded-full flex items-center justify-center bg-error/10 text-error hover:bg-error hover:text-white transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="close">close</span>
+</button>
+<button class="w-8 h-8 rounded-full flex items-center justify-center bg-primary/10 text-primary hover:bg-primary hover:text-on-primary transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="check">check</span>
+</button>
+</div>
+</div>
+<!-- Applicant 2 -->
+<div class="bg-surface-container p-4 rounded-lg flex items-center gap-4 hover:bg-surface-container-high transition-all">
+<img alt="DJ Avatar" class="w-12 h-12 rounded-lg object-cover" data-alt="Portrait of a female artist with silver hair and futuristic eyewear, moody cinematic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkKxgn4wXbAFhdcEJTClJo8JCXjpexuuEn9FqWZhX-MtwNUEHAwzEtpMAVXtaUmHqCFNjGnRtoZO030F9wySr4KuzgKN6YoZdA5-soUIlLgVcp-_BAhVAyJyz13NsxsG55g1JKVjNGdAnbTcS9HsDEiHiDg1IRDvpgKHPGHGWPgKhtr_dK7sLtMtHddjgoFSxXy1pX3zjKySO_wHdAfmcf-EHHa0_MQqXH1egLvDIQdWQJD4rOh5OZz9CFffS2btnZnftqIkT6M0k"/>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<h3 class="font-headline font-bold truncate">SILVER_SOUL</h3>
+<div class="bg-tertiary/10 text-tertiary px-1.5 py-0.5 rounded text-[10px] font-mono flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[10px]" data-icon="star" data-weight="fill">star</span> 4.7
+                                </div>
+</div>
+<div class="flex gap-2 mt-1">
+<span class="text-[9px] font-mono bg-secondary/10 text-secondary px-2 py-0.5 rounded-full border border-secondary/20">DEEP HOUSE</span>
+<span class="text-[9px] font-mono bg-secondary/10 text-secondary px-2 py-0.5 rounded-full border border-secondary/20">MELODIC</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="w-8 h-8 rounded-full flex items-center justify-center bg-surface-container-highest text-primary hover:bg-primary hover:text-on-primary transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="play_arrow" data-weight="fill">play_arrow</span>
+</button>
+<button class="w-8 h-8 rounded-full flex items-center justify-center bg-error/10 text-error hover:bg-error hover:text-white transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="close">close</span>
+</button>
+<button class="w-8 h-8 rounded-full flex items-center justify-center bg-primary/10 text-primary hover:bg-primary hover:text-on-primary transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="check">check</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Section D: Promo Tracker Table -->
+<div class="col-span-12 lg:col-span-5 bg-surface-container-low rounded-xl p-6">
+<h2 class="font-headline text-xl font-bold mb-6">PROMOTER CONVERSION</h2>
+<div class="overflow-x-auto">
+<table class="w-full">
+<thead>
+<tr class="text-left border-b border-outline-variant/10 text-[10px] font-mono text-on-surface-variant uppercase tracking-widest">
+<th class="pb-3 font-normal">Source</th>
+<th class="pb-3 font-normal text-right">Clicks</th>
+<th class="pb-3 font-normal text-right">Sales</th>
+<th class="pb-3 font-normal text-right">Revenue</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/5">
+<tr>
+<td class="py-3">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<span class="text-sm font-medium">IG_STORY_01</span>
+</div>
+</td>
+<td class="py-3 text-right font-mono text-sm">1,240</td>
+<td class="py-3 text-right font-mono text-sm text-primary">82</td>
+<td class="py-3 text-right font-mono text-sm">$4,100</td>
+</tr>
+<tr>
+<td class="py-3">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<span class="text-sm font-medium">TWITTER_ADS</span>
+</div>
+</td>
+<td class="py-3 text-right font-mono text-sm">890</td>
+<td class="py-3 text-right font-mono text-sm text-primary">34</td>
+<td class="py-3 text-right font-mono text-sm">$1,700</td>
+</tr>
+<tr>
+<td class="py-3">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-tertiary"></div>
+<span class="text-sm font-medium">DIRECT_MAIL</span>
+</div>
+</td>
+<td class="py-3 text-right font-mono text-sm">412</td>
+<td class="py-3 text-right font-mono text-sm text-primary">12</td>
+<td class="py-3 text-right font-mono text-sm">$600</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="mt-6 pt-4 border-t border-outline-variant/10 flex justify-between items-center">
+<span class="font-mono text-xs text-on-surface-variant">TOTAL PERFORMANCE</span>
+<span class="font-headline font-bold text-xl text-primary">$6,400</span>
+</div>
+</div>
+</div>
+<!-- Live Ticker Component -->
+<div class="mt-12 overflow-hidden bg-surface-container rounded-lg py-3 border-y border-primary/5">
+<div class="flex whitespace-nowrap gap-12 items-center opacity-50">
+<div class="flex items-center gap-4">
+<span class="font-mono text-[10px] uppercase text-primary">Latest RSVP</span>
+<span class="font-headline text-xs font-bold">@alex_night_99</span>
+<span class="font-mono text-[10px] text-on-surface-variant">2 mins ago</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-mono text-[10px] uppercase text-tertiary">Budget Alert</span>
+<span class="font-headline text-xs font-bold">Lighting Rig Rental Confirmed</span>
+<span class="font-mono text-[10px] text-on-surface-variant">15 mins ago</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-mono text-[10px] uppercase text-secondary">New App</span>
+<span class="font-headline text-xs font-bold">DJ VOID - Bass Specialist</span>
+<span class="font-mono text-[10px] text-on-surface-variant">1 hour ago</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-mono text-[10px] uppercase text-primary">Ticket Spike</span>
+<span class="font-headline text-xs font-bold">+12 Early Bird sold</span>
+<span class="font-mono text-[10px] text-on-surface-variant">Just now</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Shell -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center h-16 px-4 md:hidden bg-[#0e0e0e]/95 backdrop-blur-md border-t border-white/5 z-50 shadow-[0_-4px_20px_rgba(0,255,135,0.05)]">
+<a class="flex flex-col items-center justify-center text-[#00FF87] font-bold" href="#">
+<span class="material-symbols-outlined" data-icon="queue_music">queue_music</span>
+<span class="font-mono text-[10px] uppercase tracking-widest mt-1">Gigs</span>
+</a>
+<a class="flex flex-col items-center justify-center text-neutral-500 hover:text-[#00FF87] transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="confirmation_number">confirmation_number</span>
+<span class="font-mono text-[10px] uppercase tracking-widest mt-1">Bookings</span>
+</a>
+<a class="flex flex-col items-center justify-center text-neutral-500 hover:text-[#00FF87] transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="chat_bubble">chat_bubble</span>
+<span class="font-mono text-[10px] uppercase tracking-widest mt-1">Messages</span>
+</a>
+<a class="flex flex-col items-center justify-center text-neutral-500 hover:text-[#00FF87] transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+<span class="font-mono text-[10px] uppercase tracking-widest mt-1">Profile</span>
+</a>
+</nav>
+</body></html>

@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-tertiary-fixed-variant": "#592f00",
+            "on-primary": "#006531",
+            "on-secondary": "#32005c",
+            "on-error-container": "#ffa8a3",
+            "on-surface": "#ffffff",
+            "surface-container-lowest": "#000000",
+            "secondary-fixed-dim": "#dab5ff",
+            "tertiary-fixed": "#ff9727",
+            "tertiary-dim": "#ea8400",
+            "primary-dim": "#00ed7d",
+            "on-surface-variant": "#adaaaa",
+            "inverse-primary": "#006e37",
+            "surface-container-highest": "#262626",
+            "error": "#ff716c",
+            "secondary-dim": "#be82ff",
+            "secondary-container": "#6b12b9",
+            "surface-container-low": "#131313",
+            "surface-dim": "#0e0e0e",
+            "surface-container-high": "#201f1f",
+            "primary": "#a4ffb9",
+            "on-tertiary-container": "#462400",
+            "tertiary": "#ffa44c",
+            "surface-container": "#1a1919",
+            "outline": "#777575",
+            "on-primary-fixed": "#004620",
+            "on-tertiary-fixed": "#281200",
+            "surface-bright": "#2c2c2c",
+            "inverse-on-surface": "#565554",
+            "surface": "#0e0e0e",
+            "primary-fixed-dim": "#00ed7d",
+            "on-error": "#490006",
+            "primary-fixed": "#00fd86",
+            "inverse-surface": "#fcf8f8",
+            "on-primary-container": "#005b2c",
+            "tertiary-fixed-dim": "#f18900",
+            "secondary": "#be82ff",
+            "tertiary-container": "#fd9000",
+            "primary-container": "#00fd86",
+            "on-secondary-fixed-variant": "#711dbe",
+            "error-container": "#9f0519",
+            "on-secondary-fixed": "#4d008b",
+            "on-background": "#ffffff",
+            "outline-variant": "#494847",
+            "surface-variant": "#262626",
+            "error-dim": "#d7383b",
+            "on-secondary-container": "#e8ceff",
+            "background": "#0e0e0e",
+            "on-tertiary": "#552d00",
+            "on-primary-fixed-variant": "#006632",
+            "surface-tint": "#a4ffb9",
+            "secondary-fixed": "#e3c6ff"
+          },
+          fontFamily: {
+            "headline": ["Space Grotesk"],
+            "body": ["Inter"],
+            "label": ["Space Grotesk"],
+            "mono": ["JetBrains Mono"]
+          },
+          borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+        },
+      },
+    }
+  </script>
+<style>
+    body { font-family: 'Inter', sans-serif; background-color: #0e0e0e; color: #ffffff; }
+    .font-headline { font-family: 'Space Grotesk', sans-serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    .glass-card { background: rgba(38, 38, 38, 0.4); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
+    .neon-glow:hover { box-shadow: 0 0 40px rgba(0, 255, 135, 0.04); border-color: rgba(0, 255, 135, 0.4); transition: all 0.3s ease; }
+    .ticker-wrap { overflow: hidden; white-space: nowrap; }
+    .ticker { display: inline-block; animation: ticker 30s linear infinite; }
+    @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+  </style>
+</head>
+<body class="bg-background text-on-background selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="bg-[#0e0e0e]/90 backdrop-blur-xl docked full-width top-0 z-50 bg-neutral-900/50 flat no shadows sticky">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-[1440px] mx-auto">
+<div class="font-mono text-[#00FF87] font-bold tracking-tighter text-xl">SPINBOOK</div>
+<nav class="hidden md:flex items-center space-x-8">
+<a class="text-neutral-400 font-medium hover:text-[#00FF87] transition-colors duration-200" href="#">Gigs</a>
+<a class="text-neutral-400 font-medium hover:text-[#00FF87] transition-colors duration-200" href="#">Bookings</a>
+<a class="text-neutral-400 font-medium hover:text-[#00FF87] transition-colors duration-200" href="#">Messages</a>
+<a class="text-[#00FF87] border-b-2 border-[#00FF87] pb-1 font-medium" href="#">Profile</a>
+</nav>
+<div class="flex items-center space-x-4">
+<span class="text-neutral-400 font-mono text-sm hidden sm:block">DJ/Promoter</span>
+<div class="relative scale-95 active:opacity-80 transition-all cursor-pointer">
+<span class="material-symbols-outlined text-on-surface">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full"></span>
+</div>
+<img alt="User profile avatar" class="w-10 h-10 rounded-full border border-outline-variant" data-alt="close-up portrait of a professional DJ with headphones around neck in a dimly lit studio environment with teal backlighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhyaQxIA6AkYFcLklCsq4rTLHGqlNag2BHkkKFFDbGejgqWC5Ops9uhwIUNx9BAoYSlaHcSXdjtZIRdo99mAs5rf-B1mCbzxWH4A-M72okmfNzokCZ_NoJklX1ZMZv4wELfWpfwm1WpUILsCZZxt0qioOCQETbVwMnmDjlX_utQQiaFYih1dMJkpFcTx2Cd8EkNsw1Cd_CWXIpKrXX-M_lpcTFSauN1YjNLHBbVCXWSoS5zR-Zl2R-711E-LVzpSups5vFcf7TVUM"/>
+</div>
+</div>
+</header>
+<main class="max-w-[1440px] mx-auto px-6 pt-8 pb-24">
+<!-- Hero Section -->
+<section class="grid grid-cols-1 md:grid-cols-12 gap-8 items-end mb-12">
+<div class="md:col-span-3">
+<div class="relative group">
+<img class="w-full aspect-square object-cover rounded-lg shadow-2xl grayscale hover:grayscale-0 transition-all duration-700" data-alt="professional dj profile photo with high contrast dramatic lighting, looking intense, wearing dark streetwear, moody club atmosphere background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQjeeKIXV8oIcZlgygPJTu5W6ymuIOP3nbAJCkyUEWgGTd2ih4KhMbVpzcgBsg2tci36K3Jg0hImKJg4dF5QZMkXFfq0jHV6-FgQNYxF7auGffiwAfqEQk-NAVqBIEw150AnrINILF5-Xi-4lfZ5DA0oltXkptmgHgc7c_WCDMEV6AtxzYZOcJqvdTm_H9czpIHmPO1FMzp46bEt55eqm94VEgHAeer8UKfHHOBkGAhksnfHhmGv7sXN3k361h6PTznKZ6QkyVocc"/>
+<div class="absolute -bottom-4 -right-4 bg-primary-container p-3 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-on-primary-container font-bold" data-weight="fill">verified</span>
+</div>
+</div>
+</div>
+<div class="md:col-span-6">
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container text-xs font-mono rounded-full uppercase tracking-tighter">Techno</span>
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container text-xs font-mono rounded-full uppercase tracking-tighter">Industrial</span>
+<span class="px-3 py-1 bg-secondary-container text-on-secondary-container text-xs font-mono rounded-full uppercase tracking-tighter">Acid</span>
+</div>
+<h1 class="text-6xl md:text-8xl font-headline font-bold tracking-tighter text-on-surface mb-2">DJ VECTOR</h1>
+<div class="flex items-center gap-2 text-on-surface-variant font-medium">
+<span class="material-symbols-outlined text-primary">location_on</span>
+          BERLIN, DE
+        </div>
+</div>
+<div class="md:col-span-3 flex flex-col gap-4">
+<button class="w-full py-4 bg-gradient-to-br from-primary to-primary-container text-on-primary font-headline font-bold text-lg rounded-lg shadow-[0_0_20px_rgba(0,255,135,0.2)] hover:shadow-[0_0_40px_rgba(0,255,135,0.4)] transition-all active:scale-95">
+          BOOK THIS DJ
+        </button>
+<div class="flex gap-2">
+<button class="flex-1 py-3 bg-surface-container-highest border border-outline-variant text-on-surface rounded-lg font-mono text-xs uppercase tracking-widest hover:bg-surface-bright transition-colors">
+            MESSAGE
+          </button>
+<button class="p-3 bg-surface-container-highest border border-outline-variant text-on-surface rounded-lg hover:bg-surface-bright transition-colors">
+<span class="material-symbols-outlined">share</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Stats Ledger Row -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-px bg-outline-variant/20 rounded-xl overflow-hidden mb-12 border border-outline-variant/10">
+<div class="bg-surface-container-low p-6 flex flex-col gap-1">
+<span class="text-on-surface-variant font-mono text-[10px] uppercase tracking-[0.2em]">Gigs Completed</span>
+<span class="text-3xl font-mono text-primary">142</span>
+</div>
+<div class="bg-surface-container-low p-6 flex flex-col gap-1">
+<span class="text-on-surface-variant font-mono text-[10px] uppercase tracking-[0.2em]">Avg Rating</span>
+<div class="flex items-center gap-2">
+<span class="text-3xl font-mono text-tertiary">4.9</span>
+<span class="material-symbols-outlined text-tertiary text-sm" data-weight="fill">star</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 flex flex-col gap-1">
+<span class="text-on-surface-variant font-mono text-[10px] uppercase tracking-[0.2em]">Reliability</span>
+<span class="text-3xl font-mono text-on-surface">99.2%</span>
+</div>
+<div class="bg-surface-container-low p-6 flex flex-col gap-1">
+<span class="text-on-surface-variant font-mono text-[10px] uppercase tracking-[0.2em]">Member Since</span>
+<span class="text-3xl font-mono text-on-surface">2021</span>
+</div>
+</div>
+<!-- Main Content Grid -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+<!-- Left Column: Bio & Player -->
+<div class="md:col-span-8 space-y-12">
+<!-- Featured Mix Player -->
+<div class="bg-surface-container-high rounded-xl p-8 border border-outline-variant/10 relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent pointer-events-none"></div>
+<div class="flex items-center gap-6 mb-6">
+<div class="w-16 h-16 bg-primary-container rounded-lg flex items-center justify-center cursor-pointer hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-on-primary-container text-4xl" data-weight="fill">play_arrow</span>
+</div>
+<div>
+<h3 class="font-headline text-2xl font-bold">LATE NIGHT INDUSTRIAL SESSIONS VOL. 4</h3>
+<p class="font-mono text-xs text-on-surface-variant uppercase tracking-widest">Recorded live at Berghain / 01:24:00</p>
+</div>
+</div>
+<!-- Waveform Placeholder -->
+<div class="h-16 flex items-end gap-1 mb-4 opacity-60">
+<div class="flex-1 bg-primary h-[20%] rounded-full"></div>
+<div class="flex-1 bg-primary h-[40%] rounded-full"></div>
+<div class="flex-1 bg-primary h-[70%] rounded-full"></div>
+<div class="flex-1 bg-primary h-[50%] rounded-full"></div>
+<div class="flex-1 bg-primary h-[90%] rounded-full"></div>
+<div class="flex-1 bg-primary h-[100%] rounded-full"></div>
+<div class="flex-1 bg-primary h-[60%] rounded-full"></div>
+<div class="flex-1 bg-primary h-[30%] rounded-full"></div>
+<div class="flex-1 bg-primary h-[80%] rounded-full"></div>
+<div class="flex-1 bg-outline-variant h-[40%] rounded-full"></div>
+<div class="flex-1 bg-outline-variant h-[20%] rounded-full"></div>
+<div class="flex-1 bg-outline-variant h-[50%] rounded-full"></div>
+<div class="flex-1 bg-outline-variant h-[30%] rounded-full"></div>
+<div class="flex-1 bg-outline-variant h-[10%] rounded-full"></div>
+</div>
+</div>
+<!-- Bio -->
+<section>
+<h2 class="font-headline text-3xl font-bold mb-6 flex items-center gap-3">
+<span class="w-8 h-px bg-primary"></span>
+            BIOGRAPHY
+          </h2>
+<p class="text-on-surface-variant text-lg leading-relaxed max-w-2xl">
+            A staple of the Berlin underground for over a decade, DJ VECTOR specializes in high-intensity industrial techno and experimental soundscapes. Known for surgical precision in mixing and an unrelenting energy that keeps the floor moving until sunrise. Former resident at Vault &amp; Void.
+          </p>
+</section>
+<!-- Past Gigs Table -->
+<section>
+<h2 class="font-headline text-3xl font-bold mb-6 flex items-center gap-3">
+<span class="w-8 h-px bg-primary"></span>
+            PAST PERFORMANCES
+          </h2>
+<div class="bg-surface-container-low rounded-xl overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container border-b border-outline-variant/10">
+<tr>
+<th class="p-4 font-mono text-[10px] uppercase tracking-widest text-on-surface-variant">Venue</th>
+<th class="p-4 font-mono text-[10px] uppercase tracking-widest text-on-surface-variant">Date</th>
+<th class="p-4 font-mono text-[10px] uppercase tracking-widest text-on-surface-variant">Set Time</th>
+<th class="p-4 font-mono text-[10px] uppercase tracking-widest text-on-surface-variant text-right">Fee</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="p-4 font-medium">TREZOR MAIN ROOM</td>
+<td class="p-4 font-mono text-sm">OCT 12, 2023</td>
+<td class="p-4 font-mono text-sm text-secondary">02:00 - 05:00</td>
+<td class="p-4 font-mono text-sm text-right text-primary">$1,200</td>
+</tr>
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="p-4 font-medium">NEON FOUNDRY</td>
+<td class="p-4 font-mono text-sm">SEP 28, 2023</td>
+<td class="p-4 font-mono text-sm text-secondary">23:00 - 02:00</td>
+<td class="p-4 font-mono text-sm text-right text-primary">$850</td>
+</tr>
+<tr class="hover:bg-surface-container-high transition-colors">
+<td class="p-4 font-medium">VOID FESTIVAL</td>
+<td class="p-4 font-mono text-sm">AUG 15, 2023</td>
+<td class="p-4 font-mono text-sm text-secondary">SET CLoser</td>
+<td class="p-4 font-mono text-sm text-right text-primary">$2,500</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Reviews -->
+<section>
+<div class="flex justify-between items-end mb-8">
+<h2 class="font-headline text-3xl font-bold flex items-center gap-3">
+<span class="w-8 h-px bg-primary"></span>
+              REVIEWS
+            </h2>
+<a class="text-primary font-mono text-xs uppercase tracking-widest border-b border-primary/20 hover:border-primary" href="#">View All 142</a>
+</div>
+<div class="space-y-6">
+<div class="bg-surface-container-low p-6 rounded-xl border-l-2 border-primary">
+<div class="flex justify-between mb-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center font-mono text-xs">SM</div>
+<div>
+<p class="font-bold text-sm">Sarah Miller</p>
+<p class="text-[10px] font-mono text-on-surface-variant">Promoter @ Warehouse Project</p>
+</div>
+</div>
+<div class="flex gap-0.5 text-tertiary">
+<span class="material-symbols-outlined text-sm" data-weight="fill">star</span>
+<span class="material-symbols-outlined text-sm" data-weight="fill">star</span>
+<span class="material-symbols-outlined text-sm" data-weight="fill">star</span>
+<span class="material-symbols-outlined text-sm" data-weight="fill">star</span>
+<span class="material-symbols-outlined text-sm" data-weight="fill">star</span>
+</div>
+</div>
+<p class="text-on-surface-variant text-sm italic">"Unbelievable energy. The crowd didn't stop for three hours. Vector was professional, arrived early, and perfectly read the room."</p>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl">
+<div class="flex justify-between mb-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest flex items-center justify-center font-mono text-xs">RK</div>
+<div>
+<p class="font-bold text-sm">Ralf Klein</p>
+<p class="text-[10px] font-mono text-on-surface-variant">Owner @ Studio 44</p>
+</div>
+</div>
+<div class="flex gap-0.5 text-tertiary">
+<span class="material-symbols-outlined text-sm" data-weight="fill">star</span>
+<span class="material-symbols-outlined text-sm" data-weight="fill">star</span>
+<span class="material-symbols-outlined text-sm" data-weight="fill">star</span>
+<span class="material-symbols-outlined text-sm" data-weight="fill">star</span>
+<span class="material-symbols-outlined text-sm" data-weight="fill">star_half</span>
+</div>
+</div>
+<p class="text-on-surface-variant text-sm italic">"Technically perfect set. One of the best industrial techno DJs we've booked this year."</p>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Sidebar -->
+<div class="md:col-span-4 space-y-8">
+<!-- Badges Card -->
+<div class="bg-surface-container p-6 rounded-xl border border-outline-variant/10">
+<h3 class="font-mono text-[10px] uppercase tracking-[0.2em] text-on-surface-variant mb-6">Credentials</h3>
+<div class="space-y-4">
+<div class="flex items-center gap-4 group">
+<div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center border border-primary/20">
+<span class="material-symbols-outlined text-primary">verified</span>
+</div>
+<div>
+<p class="font-bold text-sm">Verified Professional</p>
+<p class="text-xs text-on-surface-variant">Identity and banking verified</p>
+</div>
+</div>
+<div class="flex items-center gap-4 group">
+<div class="w-10 h-10 bg-secondary/10 rounded-lg flex items-center justify-center border border-secondary/20">
+<span class="material-symbols-outlined text-secondary">verified_user</span>
+</div>
+<div>
+<p class="font-bold text-sm">Highly Trusted</p>
+<p class="text-xs text-on-surface-variant">100+ bookings without cancellation</p>
+</div>
+</div>
+<div class="flex items-center gap-4 group">
+<div class="w-10 h-10 bg-tertiary/10 rounded-lg flex items-center justify-center border border-tertiary/20">
+<span class="material-symbols-outlined text-tertiary">workspace_premium</span>
+</div>
+<div>
+<p class="font-bold text-sm">Elite Tier</p>
+<p class="text-xs text-on-surface-variant">Top 1% of performers in 2023</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Equipment List -->
+<div class="bg-surface-container p-6 rounded-xl border border-outline-variant/10">
+<h3 class="font-mono text-[10px] uppercase tracking-[0.2em] text-on-surface-variant mb-6">Equipment List</h3>
+<ul class="space-y-3">
+<li class="flex items-center gap-3 text-sm text-on-surface">
+<span class="w-1.5 h-1.5 bg-primary rounded-full"></span>
+              Pioneer CDJ-3000 (x4)
+            </li>
+<li class="flex items-center gap-3 text-sm text-on-surface">
+<span class="w-1.5 h-1.5 bg-primary rounded-full"></span>
+              Allen &amp; Heath Xone:96
+            </li>
+<li class="flex items-center gap-3 text-sm text-on-surface">
+<span class="w-1.5 h-1.5 bg-primary rounded-full"></span>
+              Moog Mother-32 Semi-Modular
+            </li>
+<li class="flex items-center gap-3 text-sm text-on-surface">
+<span class="w-1.5 h-1.5 bg-primary rounded-full"></span>
+              Roland TR-8S Drum Performer
+            </li>
+<li class="flex items-center gap-3 text-sm text-on-surface">
+<span class="w-1.5 h-1.5 bg-primary rounded-full"></span>
+              Universal Audio FX Suite
+            </li>
+</ul>
+</div>
+<!-- Social Icons -->
+<div class="bg-surface-container p-6 rounded-xl border border-outline-variant/10">
+<h3 class="font-mono text-[10px] uppercase tracking-[0.2em] text-on-surface-variant mb-6">Connect</h3>
+<div class="grid grid-cols-4 gap-4">
+<a class="aspect-square bg-surface-container-highest rounded-lg flex items-center justify-center hover:text-primary transition-colors border border-outline-variant/20" href="#">
+<span class="material-symbols-outlined">captive_portal</span>
+</a>
+<a class="aspect-square bg-surface-container-highest rounded-lg flex items-center justify-center hover:text-primary transition-colors border border-outline-variant/20" href="#">
+<span class="material-symbols-outlined">graphic_eq</span>
+</a>
+<a class="aspect-square bg-surface-container-highest rounded-lg flex items-center justify-center hover:text-primary transition-colors border border-outline-variant/20" href="#">
+<span class="material-symbols-outlined">podcasts</span>
+</a>
+<a class="aspect-square bg-surface-container-highest rounded-lg flex items-center justify-center hover:text-primary transition-colors border border-outline-variant/20" href="#">
+<span class="material-symbols-outlined">stream</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Live Ticker Divider -->
+<div class="ticker-wrap w-full bg-surface-container-highest border-y border-outline-variant/10 py-3 mb-12">
+<div class="ticker flex gap-12 items-center">
+<span class="font-mono text-[10px] uppercase tracking-widest text-primary flex items-center gap-2">
+<span class="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+        AVAILABLE FOR NOV/DEC BOOKINGS
+      </span>
+<span class="font-mono text-[10px] uppercase tracking-widest text-on-surface-variant">LATEST RELEASE: INDUSTRIAL COMPLEX EP OUT NOW</span>
+<span class="font-mono text-[10px] uppercase tracking-widest text-secondary">NEXT PERFORMANCE: TRESOR BERLIN - DEC 04</span>
+<span class="font-mono text-[10px] uppercase tracking-widest text-on-surface-variant">AVERAGE SET DURATION: 180 MIN</span>
+<span class="font-mono text-[10px] uppercase tracking-widest text-primary flex items-center gap-2">
+<span class="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+        AVAILABLE FOR NOV/DEC BOOKINGS
+      </span>
+<span class="font-mono text-[10px] uppercase tracking-widest text-on-surface-variant">LATEST RELEASE: INDUSTRIAL COMPLEX EP OUT NOW</span>
+<span class="font-mono text-[10px] uppercase tracking-widest text-secondary">NEXT PERFORMANCE: TRESOR BERLIN - DEC 04</span>
+</div>
+</div>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center h-16 px-4 md:hidden bg-[#0e0e0e]/95 backdrop-blur-md z-50 border-t border-white/5 shadow-[0_-4px_20px_rgba(0,255,135,0.05)]">
+<a class="flex flex-col items-center justify-center text-neutral-500 font-mono text-[10px] uppercase tracking-widest hover:text-[#00FF87] transition-all" href="#">
+<span class="material-symbols-outlined">queue_music</span>
+      Gigs
+    </a>
+<a class="flex flex-col items-center justify-center text-neutral-500 font-mono text-[10px] uppercase tracking-widest hover:text-[#00FF87] transition-all" href="#">
+<span class="material-symbols-outlined">confirmation_number</span>
+      Bookings
+    </a>
+<a class="flex flex-col items-center justify-center text-neutral-500 font-mono text-[10px] uppercase tracking-widest hover:text-[#00FF87] transition-all" href="#">
+<span class="material-symbols-outlined">chat_bubble</span>
+      Messages
+    </a>
+<a class="flex flex-col items-center justify-center text-[#00FF87] font-bold font-mono text-[10px] uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+      Profile
+    </a>
+</nav>
+</body></html>

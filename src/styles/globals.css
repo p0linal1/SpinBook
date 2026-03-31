@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #0a0a0a;
+  --foreground: #f5f7f7;
+  --surface: #141414;
+  --surface-low: #1b1b1b;
+  --surface-high: #222222;
+  --surface-ink: #2c2c2c;
+  --primary: #00ff87;
+  --secondary: #be82ff;
+  --tertiary: #ffa44c;
+  --outline: rgba(255, 255, 255, 0.12);
+  --muted: #9ea4a6;
+  --success: #00ff87;
+  --warning: #ffa44c;
+  --danger: #ff6b70;
+  --font-display: "Space Grotesk", "Avenir Next", "Segoe UI", sans-serif;
+  --font-body: "Inter", "Avenir Next", "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", "SFMono-Regular", "Menlo", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top, rgba(0, 255, 135, 0.08), transparent 20%),
+    linear-gradient(180deg, #0a0a0a 0%, #111 100%);
+  color: var(--foreground);
+  font-family: var(--font-body), sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+::selection {
+  background: rgba(0, 255, 135, 0.32);
+  color: #04110b;
+}
+
+@layer components {
+  .panel {
+    @apply rounded-2xl border border-white/10 bg-surface shadow-panel backdrop-blur;
+  }
+
+  .panel-muted {
+    @apply rounded-2xl border border-white/5 bg-surface-low;
+  }
+
+  .eyebrow {
+    @apply font-mono text-[10px] uppercase tracking-[0.28em] text-muted;
+  }
+
+  .section-heading {
+    @apply font-display text-2xl font-semibold tracking-[-0.03em] text-foreground md:text-3xl;
+  }
+
+  .status-dot {
+    @apply inline-block h-2 w-2 rounded-full;
+  }
+}
