@@ -9,6 +9,7 @@ export interface GigSlot {
   pay: number;
   status: SlotStatus;
   djName?: string;
+  dj_id?: string;
 }
 
 export interface Gig {
@@ -17,6 +18,7 @@ export interface Gig {
   venueName: string;
   city: string;
   promoterName: string;
+  promoter_id: string;
   date: string;
   timeLabel: string;
   address: string;
@@ -29,4 +31,5 @@ export interface Gig {
   applicantCount: number;
   remainingSlots: number;
   slots: GigSlot[];
+  created_at?: string;
 }

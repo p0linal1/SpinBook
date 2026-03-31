@@ -1,4 +1,4 @@
-export type UserRole = "dj" | "promoter" | "venue";
+export type UserRole = "dj" | "promoter" | "venue" | "media";
 
 export interface FeaturedMix {
   title: string;
@@ -38,4 +38,9 @@ export interface PlatformUser {
   socialLinks: { label: string; url: string }[];
   pastGigs: PastGig[];
   reviews: Review[];
+  email?: string;
+  avatar_url?: string;
+  stripe_account_id?: string;
+  stripe_onboarded?: boolean;
+  created_at?: string;
 }

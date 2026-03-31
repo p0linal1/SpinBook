@@ -1,17 +1,66 @@
+import { notFound } from "next/navigation";
 import { DjProfileCard } from "@/components/dj-profile-card";
-import { MixPlayer } from "@/components/mix-player";
 import { RatingStars } from "@/components/rating-stars";
-import { currentUser } from "@/lib/mock-data";
-import { formatCurrency, formatDate } from "@/lib/utils";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-export default function PublicProfilePage() {
-  const user = currentUser;
+interface PublicProfilePageProps {
+  params: Promise<{ id: string }>;
+}
+
+export default async function PublicProfilePage({ params }: PublicProfilePageProps) {
+  const { id } = await params;
+  const supabase = await createSupabaseServerClient();
+
+  if (!supabase) {
+    notFound();
+  }
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (!profile) {
+    notFound();
+  }
+
+  const { data: completedBookings } = await supabase
+    .from("bookings")
+    .select("event_name, venue_name, slot_name, date, pay")
+    .eq("user_id", id)
+    .eq("status", "COMPLETED");
+
+  const user = {
+    id: profile.id,
+    displayName: profile.display_name,
+    role: profile.role as "dj" | "promoter" | "venue" | "media",
+    city: profile.city,
+    genres: profile.genres ?? [],
+    rating: Number(profile.rating) || 0,
+    gigsCompleted: profile.gigs_completed ?? 0,
+    reliability: profile.reliability ?? 100,
+    memberSince: profile.member_since ?? "2024",
+    bio: profile.bio ?? "",
+    badges: profile.badges ?? [],
+    equipment: profile.equipment ?? [],
+    featuredMix: (profile.featured_mix as { title: string; duration: string; description: string }) ?? { title: "", duration: "", description: "" },
+    socialLinks: (profile.social_links as { label: string; url: string }[]) ?? [],
+    pastGigs: (completedBookings ?? []).map((b) => ({
+      eventName: b.event_name,
+      venue: b.venue_name,
+      date: b.date,
+      slotType: b.slot_name,
+      fee: Number(b.pay),
+    })),
+    reviews: [],
+  };
 
   return (
     <div className="space-y-8">
       <section className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="panel overflow-hidden bg-hero-grid p-8">
-          <p className="eyebrow">Public DJ Profile</p>
+          <p className="eyebrow">Public {profile.role === "media" ? "Media" : profile.role === "promoter" ? "Promoter" : "DJ"} Profile</p>
           <h1 className="mt-3 font-display text-6xl font-semibold tracking-[-0.06em]">
             {user.displayName}
           </h1>
@@ -34,46 +83,23 @@ export default function PublicProfilePage() {
         <DjProfileCard user={user} />
       </section>
 
-      <section className="grid gap-8 lg:grid-cols-[1fr_0.95fr]">
-        <div className="space-y-8">
-          <MixPlayer mix={user.featuredMix} />
-
-          <div className="panel p-6">
-            <p className="eyebrow mb-4">Past gigs</p>
-            <div className="space-y-3">
-              {user.pastGigs.map((gig) => (
-                <div key={`${gig.eventName}-${gig.date}`} className="grid gap-3 rounded-2xl border border-white/5 bg-surface-low px-5 py-4 md:grid-cols-[1.5fr_1fr_1fr_auto] md:items-center">
-                  <div>
-                    <p className="font-display text-lg font-medium">{gig.eventName}</p>
-                    <p className="text-sm text-muted">{gig.venue}</p>
-                  </div>
-                  <p className="font-mono text-sm text-muted">{formatDate(gig.date)}</p>
-                  <p className="text-sm text-muted">{gig.slotType}</p>
-                  <p className="font-mono text-sm text-primary">{formatCurrency(gig.fee)}</p>
+      {user.pastGigs.length > 0 && (
+        <section className="panel p-6">
+          <p className="eyebrow mb-4">Completed bookings</p>
+          <div className="space-y-3">
+            {user.pastGigs.map((gig) => (
+              <div key={`${gig.eventName}-${gig.date}`} className="grid gap-3 rounded-2xl border border-white/5 bg-surface-low px-5 py-4 md:grid-cols-[1.5fr_1fr_1fr_auto] md:items-center">
+                <div>
+                  <p className="font-display text-lg font-medium">{gig.eventName}</p>
+                  <p className="text-sm text-muted">{gig.venue}</p>
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        <div className="panel p-6">
-          <p className="eyebrow mb-4">Reviews</p>
-          <div className="space-y-5">
-            {user.reviews.map((review) => (
-              <div key={`${review.author}-${review.eventName}`} className="rounded-2xl border border-white/5 bg-surface-low p-5">
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <p className="font-display text-xl font-medium">{review.author}</p>
-                    <p className="mt-1 text-sm text-muted">{review.eventName}</p>
-                  </div>
-                  <RatingStars rating={review.rating} />
-                </div>
-                <p className="mt-4 text-sm leading-7 text-muted">{review.body}</p>
+                <p className="text-sm text-muted">{gig.slotType}</p>
+                <p className="font-mono text-sm text-primary">${gig.fee}</p>
               </div>
             ))}
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </div>
   );
 }

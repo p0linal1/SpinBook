@@ -1,0 +1,5 @@
+- [ ] Update `src/types/database.ts` to add typed `public.Functions.accept_application` (Args/Returns) compatible with Supabase v2.
+- [ ] Update `src/lib/supabase/middleware.ts` to use `createServerClient<Database>(...)`.
+- [ ] Run `npm run typecheck` and inspect remaining errors.
+- [ ] If needed, apply minimal fixes in API routes for remaining Supabase type errors.
+- [ ] Re-run `npm run typecheck` to confirm.

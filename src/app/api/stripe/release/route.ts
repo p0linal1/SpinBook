@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { createPaymentIntent } from "@/lib/stripe";
+import { createTransfer } from "@/lib/stripe";
 
 export async function POST(request: Request) {
   const supabase = await createSupabaseServerClient();
@@ -28,28 +28,44 @@ export async function POST(request: Request) {
   }
 
   if (user.id !== contract.promoter_id) {
-    return NextResponse.json({ error: "Only the promoter can fund escrow" }, { status: 403 });
+    return NextResponse.json({ error: "Only the promoter can release funds" }, { status: 403 });
   }
 
-  if (contract.status !== "signed") {
-    return NextResponse.json({ error: "Contract must be signed before funding" }, { status: 400 });
+  if (contract.status !== "escrow_funded") {
+    return NextResponse.json({ error: "Escrow must be funded before release" }, { status: 400 });
+  }
+
+  // Get DJ's Stripe account
+  const { data: djProfile } = await supabase
+    .from("profiles")
+    .select("stripe_account_id")
+    .eq("id", contract.dj_id)
+    .single();
+
+  if (!djProfile?.stripe_account_id) {
+    return NextResponse.json({ error: "DJ has not set up Stripe Connect" }, { status: 400 });
   }
 
   try {
-    const pi = await createPaymentIntent(Number(contract.pay), "usd", {
+    await createTransfer(Number(contract.pay), djProfile.stripe_account_id, {
       contract_id: contract.id,
       booking_id: contract.booking_id,
     });
 
-    // Save PI id on contract
+    // Update contract and booking status
     await supabase
       .from("contracts")
-      .update({ stripe_payment_intent_id: pi.id })
+      .update({ status: "completed" })
       .eq("id", contract.id);
 
-    return NextResponse.json({ clientSecret: pi.client_secret });
+    await supabase
+      .from("bookings")
+      .update({ status: "COMPLETED" })
+      .eq("id", contract.booking_id);
+
+    return NextResponse.json({ success: true });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Payment failed";
+    const message = err instanceof Error ? err.message : "Transfer failed";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

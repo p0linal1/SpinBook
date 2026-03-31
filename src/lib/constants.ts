@@ -21,7 +21,7 @@ export const cities = [
   "Berlin, DE",
 ];
 
-export const roleOptions = ["DJ", "Promoter", "Venue"] as const;
+export const roleOptions = ["DJ", "Promoter", "Venue", "Media"] as const;
 
 export const gigStatuses = ["OPEN", "FILLED", "URGENT"] as const;
 
@@ -31,4 +31,20 @@ export const bookingStatuses = [
   "PAID",
   "COMPLETED",
   "DISPUTED",
+] as const;
+
+export const applicationStatuses = [
+  "pending",
+  "accepted",
+  "rejected",
+  "withdrawn",
+] as const;
+
+export const contractStatuses = [
+  "pending",
+  "signed",
+  "escrow_funded",
+  "completed",
+  "disputed",
+  "cancelled",
 ] as const;

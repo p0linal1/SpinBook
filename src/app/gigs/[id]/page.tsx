@@ -2,8 +2,10 @@ import { notFound } from "next/navigation";
 import { ApplyModal } from "@/components/apply-modal";
 import { GigSlot } from "@/components/gig-slot";
 import { RatingStars } from "@/components/rating-stars";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { featuredGigs, promoterProfile } from "@/lib/mock-data";
 import { formatDate } from "@/lib/utils";
+import type { Gig } from "@/types/gig";
 
 interface GigDetailPageProps {
   params: Promise<{ id: string }>;
@@ -11,10 +13,50 @@ interface GigDetailPageProps {
 
 export default async function GigDetailPage({ params }: GigDetailPageProps) {
   const { id } = await params;
-  const gig = featuredGigs.find((item) => item.id === id);
 
+  let gig: Gig | null = null;
+  let promoter: { displayName: string; bio: string; rating: number } | null = null;
+
+  const supabase = await createSupabaseServerClient();
+  if (supabase) {
+    const { data: dbGig } = await supabase.from("gigs").select("*").eq("id", id).single();
+    if (dbGig) {
+      const { data: dbSlots } = await supabase.from("gig_slots").select("*").eq("gig_id", id);
+      const { data: dbPromoter } = await supabase.from("profiles").select("display_name, bio, rating").eq("id", dbGig.promoter_id).single();
+
+      const slots = (dbSlots ?? []).map((s) => ({
+        id: s.id, name: s.name, start: s.start_time, end: s.end_time,
+        pay: Number(s.pay), status: s.status as "open" | "filled",
+        djName: s.assigned_user_name ?? undefined, dj_id: s.assigned_user_id ?? undefined,
+      }));
+
+      gig = {
+        id: dbGig.id, eventName: dbGig.event_name, venueName: dbGig.venue_name,
+        city: dbGig.city, promoterName: dbPromoter?.display_name ?? "Unknown",
+        promoter_id: dbGig.promoter_id, date: dbGig.date, timeLabel: dbGig.time_label,
+        address: dbGig.address, status: dbGig.status as Gig["status"],
+        genres: dbGig.genres ?? [], tags: dbGig.tags ?? [],
+        description: dbGig.description, equipment: dbGig.equipment,
+        promoExpectation: dbGig.promo_expectation, applicantCount: 0,
+        remainingSlots: slots.filter((s) => s.status === "open").length, slots,
+      };
+
+      if (dbPromoter) {
+        promoter = { displayName: dbPromoter.display_name, bio: dbPromoter.bio ?? "", rating: Number(dbPromoter.rating) || 0 };
+      }
+    }
+  }
+
+  // Fallback to mock data
   if (!gig) {
-    notFound();
+    const mockGig = featuredGigs.find((item) => item.id === id);
+    if (!mockGig) notFound();
+    gig = mockGig!;
+    promoter = { displayName: promoterProfile.displayName, bio: promoterProfile.bio, rating: promoterProfile.rating };
+  }
+
+  if (!promoter) {
+    promoter = { displayName: gig.promoterName, bio: "", rating: 0 };
   }
 
   return (
@@ -64,41 +106,15 @@ export default async function GigDetailPage({ params }: GigDetailPageProps) {
             ))}
           </div>
         </div>
-
-        <div className="panel p-6">
-          <p className="eyebrow">Other gigs by this promoter</p>
-          <div className="mt-4 grid gap-3 md:grid-cols-2">
-            {featuredGigs
-              .filter((item) => item.id !== gig.id)
-              .map((item) => (
-                <div key={item.id} className="rounded-2xl border border-white/5 bg-surface-low p-4">
-                  <p className="font-display text-lg font-medium">{item.eventName}</p>
-                  <p className="mt-2 text-sm text-muted">
-                    {item.venueName} · {formatDate(item.date)}
-                  </p>
-                </div>
-              ))}
-          </div>
-        </div>
       </section>
 
       <aside className="space-y-6">
         <div className="panel p-6">
           <p className="eyebrow">Promoter</p>
-          <h2 className="mt-2 font-display text-2xl font-semibold">{promoterProfile.displayName}</h2>
-          <p className="mt-2 text-sm text-muted">{promoterProfile.bio}</p>
+          <h2 className="mt-2 font-display text-2xl font-semibold">{promoter.displayName}</h2>
+          <p className="mt-2 text-sm text-muted">{promoter.bio}</p>
           <div className="mt-4">
-            <RatingStars rating={promoterProfile.rating} />
-          </div>
-          <div className="mt-5 grid grid-cols-2 gap-4">
-            <div className="rounded-2xl bg-white/5 p-4">
-              <p className="eyebrow">Past events</p>
-              <p className="mt-2 font-mono text-2xl text-primary">64</p>
-            </div>
-            <div className="rounded-2xl bg-white/5 p-4">
-              <p className="eyebrow">Response time</p>
-              <p className="mt-2 font-mono text-2xl text-foreground">2h</p>
-            </div>
+            <RatingStars rating={promoter.rating} />
           </div>
         </div>
 

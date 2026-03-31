@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { NavBar } from "@/components/nav-bar";
+import { AuthProvider } from "@/lib/auth-context";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
@@ -15,8 +16,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <NavBar />
-        <div className="mx-auto max-w-7xl px-6 py-8">{children}</div>
+        <AuthProvider>
+          <NavBar />
+          <div className="mx-auto max-w-7xl px-6 py-8">{children}</div>
+        </AuthProvider>
       </body>
     </html>
   );

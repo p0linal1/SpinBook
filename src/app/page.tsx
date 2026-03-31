@@ -1,45 +1,76 @@
-import { DjProfileCard } from "@/components/dj-profile-card";
 import { GigCard } from "@/components/gig-card";
 import { StatCard } from "@/components/stat-card";
 import { cities, genres } from "@/lib/constants";
-import { currentUser, featuredGigs, gigFeedStats } from "@/lib/mock-data";
+import { featuredGigs, gigFeedStats } from "@/lib/mock-data";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import type { Gig } from "@/types/gig";
 
-export default function HomePage() {
+export default async function HomePage() {
+  let gigs: Gig[] = [];
+
+  const supabase = await createSupabaseServerClient();
+  if (supabase) {
+    const { data: dbGigs } = await supabase.from("gigs").select("*").order("created_at", { ascending: false }).limit(6);
+    if (dbGigs && dbGigs.length > 0) {
+      const gigIds = dbGigs.map((g) => g.id);
+      const { data: allSlots } = await supabase.from("gig_slots").select("*").in("gig_id", gigIds);
+      const promoterIds = [...new Set(dbGigs.map((g) => g.promoter_id))];
+      const { data: promoters } = await supabase.from("profiles").select("id, display_name").in("id", promoterIds);
+      const promoterMap = new Map((promoters ?? []).map((p) => [p.id, p.display_name]));
+
+      gigs = dbGigs.map((gig) => {
+        const slots = (allSlots ?? []).filter((s) => s.gig_id === gig.id).map((s) => ({
+          id: s.id, name: s.name, start: s.start_time, end: s.end_time,
+          pay: Number(s.pay), status: s.status as "open" | "filled",
+          djName: s.assigned_user_name ?? undefined, dj_id: s.assigned_user_id ?? undefined,
+        }));
+        return {
+          id: gig.id, eventName: gig.event_name, venueName: gig.venue_name,
+          city: gig.city, promoterName: promoterMap.get(gig.promoter_id) ?? "Unknown",
+          promoter_id: gig.promoter_id, date: gig.date, timeLabel: gig.time_label,
+          address: gig.address, status: gig.status as Gig["status"],
+          genres: gig.genres ?? [], tags: gig.tags ?? [],
+          description: gig.description, equipment: gig.equipment,
+          promoExpectation: gig.promo_expectation, applicantCount: 0,
+          remainingSlots: slots.filter((s) => s.status === "open").length, slots,
+        };
+      });
+    }
+  }
+
+  if (gigs.length === 0) gigs = featuredGigs;
+
   return (
     <div className="space-y-10">
       <section className="panel overflow-hidden bg-hero-grid p-8">
-        <div className="grid gap-10 lg:grid-cols-[1.35fr_0.65fr]">
-          <div>
-            <p className="eyebrow">DJ View · Gigs Feed</p>
-            <h1 className="mt-3 max-w-3xl font-display text-5xl font-semibold tracking-[-0.05em] text-foreground md:text-6xl">
-              Get Booked. Get Paid. Build Your Name.
-            </h1>
-            <p className="mt-5 max-w-2xl text-lg leading-8 text-muted">
-              Open gigs, dependable promoters, auto-generated contracts, and escrow-backed payouts
-              in one nightlife-native workflow.
-            </p>
+        <div>
+          <p className="eyebrow">Gigs Feed</p>
+          <h1 className="mt-3 max-w-3xl font-display text-5xl font-semibold tracking-[-0.05em] text-foreground md:text-6xl">
+            Get Booked. Get Paid. Build Your Name.
+          </h1>
+          <p className="mt-5 max-w-2xl text-lg leading-8 text-muted">
+            Open gigs, dependable promoters, auto-generated contracts, and escrow-backed payouts
+            in one nightlife-native workflow.
+          </p>
 
-            <div className="mt-8 overflow-hidden rounded-2xl border border-white/10 bg-black/20 py-3">
-              <div className="flex min-w-max animate-ticker gap-8 px-4">
-                {[
-                  "LIVE OPPORTUNITIES: 142 OPEN GIGS",
-                  "LOS ANGELES AVG: $640 / NIGHT",
-                  "MIDNIGHT BUREAU BOOKING NOW",
-                  "CHICAGO URGENT SLOT JUST POSTED",
-                  "ESCROW RELEASES WITHIN 24 HOURS",
-                  "LIVE OPPORTUNITIES: 142 OPEN GIGS",
-                  "LOS ANGELES AVG: $640 / NIGHT",
-                  "MIDNIGHT BUREAU BOOKING NOW",
-                ].map((item, index) => (
-                  <span key={`${item}-${index}`} className="font-mono text-[11px] uppercase tracking-[0.22em] text-primary">
-                    {item}
-                  </span>
-                ))}
-              </div>
+          <div className="mt-8 overflow-hidden rounded-2xl border border-white/10 bg-black/20 py-3">
+            <div className="flex min-w-max animate-ticker gap-8 px-4">
+              {[
+                "LIVE OPPORTUNITIES: 142 OPEN GIGS",
+                "LOS ANGELES AVG: $640 / NIGHT",
+                "MIDNIGHT BUREAU BOOKING NOW",
+                "CHICAGO URGENT SLOT JUST POSTED",
+                "ESCROW RELEASES WITHIN 24 HOURS",
+                "LIVE OPPORTUNITIES: 142 OPEN GIGS",
+                "LOS ANGELES AVG: $640 / NIGHT",
+                "MIDNIGHT BUREAU BOOKING NOW",
+              ].map((item, index) => (
+                <span key={`${item}-${index}`} className="font-mono text-[11px] uppercase tracking-[0.22em] text-primary">
+                  {item}
+                </span>
+              ))}
             </div>
           </div>
-
-          <DjProfileCard user={currentUser} />
         </div>
       </section>
 
@@ -98,12 +129,12 @@ export default function HomePage() {
         <div className="mb-6 flex items-end justify-between gap-4">
           <div>
             <p className="eyebrow">Open Gigs</p>
-            <h2 className="section-heading mt-2">Tonight’s strongest fits for your profile</h2>
+            <h2 className="section-heading mt-2">Latest opportunities</h2>
           </div>
         </div>
 
         <div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
-          {featuredGigs.map((gig) => (
+          {gigs.map((gig) => (
             <GigCard key={gig.id} gig={gig} />
           ))}
         </div>

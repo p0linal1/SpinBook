@@ -1,5 +1,9 @@
+import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { featuredGigs } from "@/lib/mock-data";
+import type { Gig } from "@/types/gig";
+import { EventApplications } from "@/components/event-applications";
 
 interface EventPageProps {
   params: Promise<{ id: string }>;
@@ -7,7 +11,58 @@ interface EventPageProps {
 
 export default async function EventPage({ params }: EventPageProps) {
   const { id } = await params;
-  const gig = featuredGigs.find((item) => item.id === id) ?? featuredGigs[0];
+
+  let gig: Gig | null = null;
+  let applications: Array<{
+    id: string;
+    applicant_name: string;
+    applicant_role: string;
+    status: string;
+    slot_id: string;
+    mix_link: string | null;
+    note: string | null;
+  }> = [];
+
+  const supabase = await createSupabaseServerClient();
+  if (supabase) {
+    const { data: dbGig } = await supabase.from("gigs").select("*").eq("id", id).single();
+    if (dbGig) {
+      const { data: dbSlots } = await supabase.from("gig_slots").select("*").eq("gig_id", id);
+      const { data: dbPromoter } = await supabase.from("profiles").select("display_name").eq("id", dbGig.promoter_id).single();
+
+      const slots = (dbSlots ?? []).map((s) => ({
+        id: s.id, name: s.name, start: s.start_time, end: s.end_time,
+        pay: Number(s.pay), status: s.status as "open" | "filled",
+        djName: s.assigned_user_name ?? undefined, dj_id: s.assigned_user_id ?? undefined,
+      }));
+
+      gig = {
+        id: dbGig.id, eventName: dbGig.event_name, venueName: dbGig.venue_name,
+        city: dbGig.city, promoterName: dbPromoter?.display_name ?? "Unknown",
+        promoter_id: dbGig.promoter_id, date: dbGig.date, timeLabel: dbGig.time_label,
+        address: dbGig.address, status: dbGig.status as Gig["status"],
+        genres: dbGig.genres ?? [], tags: dbGig.tags ?? [],
+        description: dbGig.description, equipment: dbGig.equipment,
+        promoExpectation: dbGig.promo_expectation, applicantCount: 0,
+        remainingSlots: slots.filter((s) => s.status === "open").length, slots,
+      };
+
+      // Get applications for this gig
+      const { data: dbApps } = await supabase
+        .from("applications")
+        .select("id, applicant_name, applicant_role, status, slot_id, mix_link, note")
+        .eq("gig_id", id)
+        .order("created_at", { ascending: false });
+
+      applications = dbApps ?? [];
+    }
+  }
+
+  // Fallback mock
+  if (!gig) {
+    const mockGig = featuredGigs.find((item) => item.id === id) ?? featuredGigs[0];
+    gig = mockGig;
+  }
 
   return (
     <div className="space-y-8">
@@ -41,7 +96,6 @@ export default async function EventPage({ params }: EventPageProps) {
         <div className="panel p-6 xl:col-span-8">
           <div className="flex items-center justify-between gap-4">
             <h2 className="font-display text-2xl font-semibold">Lineup timeline</h2>
-            <span className="font-mono text-xs uppercase tracking-[0.18em] text-muted">Local time 9:42 PM</span>
           </div>
 
           <div className="mt-8 space-y-4">
@@ -75,65 +129,18 @@ export default async function EventPage({ params }: EventPageProps) {
               </div>
             ))}
           </div>
-
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-2xl bg-surface-low p-4">
-              <p className="eyebrow">Total clicks</p>
-              <p className="mt-2 font-mono text-3xl text-foreground">2,842</p>
-            </div>
-            <div className="rounded-2xl bg-surface-low p-4">
-              <p className="eyebrow">RSVPs</p>
-              <p className="mt-2 font-mono text-3xl text-primary">156</p>
-            </div>
-          </div>
         </div>
 
         <div className="panel p-6 xl:col-span-7">
-          <div className="flex items-center justify-between gap-4">
-            <h2 className="font-display text-2xl font-semibold">Applications</h2>
-            <button className="text-sm text-primary">View all 42</button>
-          </div>
-
-          <div className="mt-6 space-y-3">
-            {[
-              { name: "Luna Tek", genres: "Hard Techno · Industrial", rating: "4.9" },
-              { name: "Mina Flux", genres: "House · Disco", rating: "4.8" },
-              { name: "Core Memory", genres: "Open Format · R&B", rating: "4.7" },
-            ].map((applicant) => (
-              <div key={applicant.name} className="flex flex-wrap items-center gap-4 rounded-2xl border border-white/5 bg-surface-low p-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-secondary/20 font-display text-lg text-secondary">
-                  {applicant.name
-                    .split(" ")
-                    .map((part) => part[0])
-                    .join("")}
-                </div>
-                <div className="flex-1">
-                  <p className="font-display text-lg font-medium">{applicant.name}</p>
-                  <p className="text-sm text-muted">{applicant.genres}</p>
-                </div>
-                <span className="rounded-full bg-tertiary/15 px-3 py-1 text-sm text-tertiary">
-                  ★ {applicant.rating}
-                </span>
-                <div className="flex gap-2">
-                  <button className="rounded-full bg-danger/15 px-3 py-2 text-sm text-danger">Reject</button>
-                  <button className="rounded-full bg-primary px-3 py-2 text-sm text-black">Accept</button>
-                </div>
-              </div>
-            ))}
-          </div>
+          <EventApplications applications={applications} gigId={gig.id} />
         </div>
 
         <div className="panel p-6 xl:col-span-5">
           <h2 className="font-display text-2xl font-semibold">Run of show</h2>
           <div className="mt-6 space-y-3">
-            {[
-              "Doors open at 9:00 PM · Door staff Marcus",
-              "Opener starts at 10:00 PM · Mina Flux",
-              "Main room handoff at 11:00 PM · Nova Vale",
-              "Photographer arrives at 11:30 PM",
-            ].map((item) => (
-              <div key={item} className="rounded-2xl border border-white/5 bg-surface-low px-4 py-4 text-sm text-muted">
-                {item}
+            {gig.slots.map((slot) => (
+              <div key={slot.id} className="rounded-2xl border border-white/5 bg-surface-low px-4 py-4 text-sm text-muted">
+                {slot.name} at {slot.start} · {slot.status === "filled" ? slot.djName : "TBD"}
               </div>
             ))}
           </div>
