@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import type { Gig } from "@/types/gig";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth-context";
+import { isUuid } from "@/lib/utils";
 
 interface ApplyModalProps {
   gig: Gig;
@@ -24,11 +25,19 @@ export function ApplyModal({ gig }: ApplyModalProps) {
 
   const isMedia = profile?.role === "media";
   const canApply = profile?.role === "dj" || profile?.role === "media";
+  /** Mock / seed gigs use slug IDs; only database-backed gigs can be inserted into `applications`. */
+  const dbBackedGig = isUuid(gig.id);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!user) {
       router.push("/auth/login");
+      return;
+    }
+    if (!dbBackedGig) {
+      setError(
+        "This listing is sample data. Applications only work for gigs posted in SpinBook (they use real database IDs).",
+      );
       return;
     }
     setError("");
@@ -79,6 +88,12 @@ export function ApplyModal({ gig }: ApplyModalProps) {
     <section className="panel p-6">
       <p className="eyebrow mb-2">Application</p>
       <h3 className="font-display text-2xl font-semibold">Submit for {gig.eventName}</h3>
+
+      {!dbBackedGig && (
+        <p className="mt-3 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-muted">
+          This gig is preview-only (demo IDs). To submit a real application, open a gig that was posted inside SpinBook.
+        </p>
+      )}
 
       {error && (
         <p className="mt-3 rounded-xl border border-danger/20 bg-danger/10 px-4 py-3 text-sm text-danger">{error}</p>
@@ -131,7 +146,12 @@ export function ApplyModal({ gig }: ApplyModalProps) {
           <span>I confirm I can meet the equipment and arrival requirements for this booking.</span>
         </label>
 
-        <Button className="w-full" size="lg" type="submit" disabled={loading || !confirmed || !canApply}>
+        <Button
+          className="w-full"
+          size="lg"
+          type="submit"
+          disabled={loading || !confirmed || !canApply || !dbBackedGig}
+        >
           {loading ? "Submitting…" : "Submit Application"}
         </Button>
       </form>

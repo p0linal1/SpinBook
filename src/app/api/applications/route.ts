@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
+import { getProfileRole } from "@/lib/supabase/profile-role";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { isUuid } from "@/lib/utils";
 
 export async function POST(request: Request) {
   const supabase = await createSupabaseServerClient();
@@ -19,6 +21,16 @@ export async function POST(request: Request) {
 
   const body = await request.json();
   const { gig_id, slot_id, mix_link, note } = body;
+
+  if (typeof gig_id !== "string" || typeof slot_id !== "string" || !isUuid(gig_id) || !isUuid(slot_id)) {
+    return NextResponse.json(
+      {
+        error:
+          "This gig or slot cannot accept applications. Sample listings use demo IDs — apply to gigs posted in SpinBook.",
+      },
+      { status: 400 },
+    );
+  }
 
   // Get display name from profile
   const { data: profile } = await supabase
@@ -62,10 +74,10 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const role = user.user_metadata?.role;
+  const role = await getProfileRole(supabase, user.id, user.user_metadata?.role as string | undefined);
 
-  if (role === "promoter") {
-    // Get applications to promoter's gigs
+  if (role === "promoter" || role === "venue") {
+    // Gigs posted by this account (promoter_id column — includes venue-posted gigs)
     const { data: gigs } = await supabase.from("gigs").select("id").eq("promoter_id", user.id);
     const gigIds = (gigs ?? []).map((g) => g.id);
     if (gigIds.length === 0) return NextResponse.json({ data: [] });

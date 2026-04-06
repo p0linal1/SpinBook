@@ -3,9 +3,12 @@ import Link from "next/link";
 import { GigCard } from "@/components/gig-card";
 import { ArrowRightIcon } from "@/components/landing/arrow-right";
 import { BookingPreviewCard } from "@/components/landing/booking-preview-card";
+import { FeaturesGrid } from "@/components/landing/features-grid";
+import { PricingSection } from "@/components/landing/pricing-section";
 import { StatCard } from "@/components/stat-card";
 import { cities, genres } from "@/lib/constants";
 import { featuredGigs, gigFeedStats } from "@/lib/mock-data";
+import { enrichGigsWithApplicationCounts } from "@/lib/gig-applications";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { Gig } from "@/types/gig";
 
@@ -45,6 +48,13 @@ export default async function HomePage() {
   }
 
   if (gigs.length === 0) gigs = featuredGigs;
+
+  let viewerId: string | null = null;
+  if (supabase) {
+    const { data: { user } } = await supabase.auth.getUser();
+    viewerId = user?.id ?? null;
+    gigs = await enrichGigsWithApplicationCounts(supabase, gigs);
+  }
 
   return (
     <div className="space-y-0">
@@ -125,7 +135,7 @@ export default async function HomePage() {
               one professional home for every booking — from first offer to final payout.
             </p>
             <Link
-              href="#for-djs"
+              href="#features"
               className="inline-flex w-fit items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-black transition hover:bg-white/95"
             >
               Learn More
@@ -135,42 +145,9 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section id="for-djs" className="scroll-mt-28 border-t border-white/[0.06] py-16 md:py-20">
-        <div className="max-w-3xl">
-          <h2 className="font-display text-3xl font-bold tracking-[-0.03em] text-white">For DJs</h2>
-          <p className="mt-4 text-lg leading-relaxed text-white/75">
-            One place to review offers, sign contracts, and track payouts. Apply to open gigs, keep your rider and
-            terms on file, and get paid without the back-and-forth.
-          </p>
-        </div>
-      </section>
+      <FeaturesGrid />
 
-      <section id="for-venues" className="scroll-mt-28 border-t border-white/[0.06] py-16 md:py-20">
-        <div className="max-w-3xl">
-          <h2 className="font-display text-3xl font-bold tracking-[-0.03em] text-white">For Venues</h2>
-          <p className="mt-4 text-lg leading-relaxed text-white/75">
-            Post gigs, review applicants, and lock in agreements with clear terms. SpinBook keeps your bookings
-            organized so your nights run smoothly.
-          </p>
-        </div>
-      </section>
-
-      <section id="pricing" className="scroll-mt-28 border-t border-white/[0.06] py-16 md:py-20">
-        <div className="max-w-3xl">
-          <h2 className="font-display text-3xl font-bold tracking-[-0.03em] text-white">Pricing</h2>
-          <p className="mt-4 text-lg leading-relaxed text-white/75">
-            Simple, transparent fees aligned with how you book. Create an account to see current plans — we will keep
-            pricing fair for independent artists and rooms of every size.
-          </p>
-          <Link
-            href="/auth/signup"
-            className="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-black transition hover:bg-white/95"
-          >
-            Get Started
-            <ArrowRightIcon className="h-4 w-4" />
-          </Link>
-        </div>
-      </section>
+      <PricingSection />
 
       <section id="faq" className="scroll-mt-28 border-t border-white/[0.06] py-16 md:py-20">
         <div className="max-w-3xl space-y-8">
@@ -287,9 +264,13 @@ export default async function HomePage() {
           </div>
 
           <div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
-            {gigs.map((gig) => (
-              <GigCard key={gig.id} gig={gig} />
-            ))}
+          {gigs.map((gig) => (
+            <GigCard
+              key={gig.id}
+              gig={gig}
+              viewerIsOwner={Boolean(viewerId && viewerId === gig.promoter_id)}
+            />
+          ))}
           </div>
         </section>
       </section>

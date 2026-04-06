@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { canViewHostBookings, getProfileRole } from "@/lib/supabase/profile-role";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export async function GET() {
@@ -12,10 +13,10 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const role = user.user_metadata?.role;
+  const role = await getProfileRole(supabase, user.id, user.user_metadata?.role as string | undefined);
 
   let query;
-  if (role === "promoter") {
+  if (canViewHostBookings(role)) {
     query = supabase.from("bookings").select("*").eq("promoter_id", user.id);
   } else {
     query = supabase.from("bookings").select("*").eq("user_id", user.id);

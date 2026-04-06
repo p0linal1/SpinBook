@@ -1,9 +1,8 @@
-import { notFound } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
-import { featuredGigs } from "@/lib/mock-data";
-import type { Gig } from "@/types/gig";
+import Link from "next/link";
+import { notFound, redirect } from "next/navigation";
 import { EventApplications } from "@/components/event-applications";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import type { Gig } from "@/types/gig";
 
 interface EventPageProps {
   params: Promise<{ id: string }>;
@@ -12,71 +11,70 @@ interface EventPageProps {
 export default async function EventPage({ params }: EventPageProps) {
   const { id } = await params;
 
-  let gig: Gig | null = null;
-  let applications: Array<{
-    id: string;
-    applicant_name: string;
-    applicant_role: string;
-    status: string;
-    slot_id: string;
-    mix_link: string | null;
-    note: string | null;
-  }> = [];
-
   const supabase = await createSupabaseServerClient();
-  if (supabase) {
-    const { data: dbGig } = await supabase.from("gigs").select("*").eq("id", id).single();
-    if (dbGig) {
-      const { data: dbSlots } = await supabase.from("gig_slots").select("*").eq("gig_id", id);
-      const { data: dbPromoter } = await supabase.from("profiles").select("display_name").eq("id", dbGig.promoter_id).single();
-
-      const slots = (dbSlots ?? []).map((s) => ({
-        id: s.id, name: s.name, start: s.start_time, end: s.end_time,
-        pay: Number(s.pay), status: s.status as "open" | "filled",
-        djName: s.assigned_user_name ?? undefined, dj_id: s.assigned_user_id ?? undefined,
-      }));
-
-      gig = {
-        id: dbGig.id, eventName: dbGig.event_name, venueName: dbGig.venue_name,
-        city: dbGig.city, promoterName: dbPromoter?.display_name ?? "Unknown",
-        promoter_id: dbGig.promoter_id, date: dbGig.date, timeLabel: dbGig.time_label,
-        address: dbGig.address, status: dbGig.status as Gig["status"],
-        genres: dbGig.genres ?? [], tags: dbGig.tags ?? [],
-        description: dbGig.description, equipment: dbGig.equipment,
-        promoExpectation: dbGig.promo_expectation, applicantCount: 0,
-        remainingSlots: slots.filter((s) => s.status === "open").length, slots,
-      };
-
-      // Get applications for this gig
-      const { data: dbApps } = await supabase
-        .from("applications")
-        .select("id, applicant_name, applicant_role, status, slot_id, mix_link, note")
-        .eq("gig_id", id)
-        .order("created_at", { ascending: false });
-
-      applications = dbApps ?? [];
-    }
+  if (!supabase) {
+    notFound();
   }
 
-  // Fallback mock
-  if (!gig) {
-    const mockGig = featuredGigs.find((item) => item.id === id) ?? featuredGigs[0];
-    gig = mockGig;
+  const { data: dbGig } = await supabase.from("gigs").select("*").eq("id", id).single();
+  if (!dbGig) {
+    notFound();
   }
+
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user || user.id !== dbGig.promoter_id) {
+    redirect(`/gigs/${id}`);
+  }
+
+  const { data: dbSlots } = await supabase.from("gig_slots").select("*").eq("gig_id", id);
+  const { data: dbPromoter } = await supabase.from("profiles").select("display_name").eq("id", dbGig.promoter_id).single();
+
+  const slots = (dbSlots ?? []).map((s) => ({
+    id: s.id, name: s.name, start: s.start_time, end: s.end_time,
+    pay: Number(s.pay), status: s.status as "open" | "filled",
+    djName: s.assigned_user_name ?? undefined, dj_id: s.assigned_user_id ?? undefined,
+  }));
+
+  const gig: Gig = {
+    id: dbGig.id, eventName: dbGig.event_name, venueName: dbGig.venue_name,
+    city: dbGig.city, promoterName: dbPromoter?.display_name ?? "Unknown",
+    promoter_id: dbGig.promoter_id, date: dbGig.date, timeLabel: dbGig.time_label,
+    address: dbGig.address, status: dbGig.status as Gig["status"],
+    genres: dbGig.genres ?? [], tags: dbGig.tags ?? [],
+    description: dbGig.description, equipment: dbGig.equipment,
+    promoExpectation: dbGig.promo_expectation, applicantCount: 0,
+    remainingSlots: slots.filter((s) => s.status === "open").length, slots,
+  };
+
+  const { data: dbApps } = await supabase
+    .from("applications")
+    .select("id, applicant_name, applicant_role, status, slot_id, mix_link, note")
+    .eq("gig_id", id)
+    .order("created_at", { ascending: false });
+
+  const applications = dbApps ?? [];
+  const slotNames = Object.fromEntries(slots.map((s) => [s.id, `${s.name} (${s.start}–${s.end})`]));
 
   return (
     <div className="space-y-8">
       <section className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
-          <p className="eyebrow">Promoter Command Center</p>
+          <p className="eyebrow">Host dashboard</p>
           <h1 className="mt-2 font-display text-4xl font-semibold">{gig.eventName}</h1>
           <p className="mt-2 font-mono text-sm uppercase tracking-[0.18em] text-primary">
             {gig.venueName} · {gig.city}
           </p>
+          <p className="mt-3 text-sm text-muted">
+            Accept or decline applicants below. DJs are notified when you accept (booking flow may continue in Bookings).
+          </p>
         </div>
-        <div className="flex gap-3">
-          <Button variant="secondary">Edit Event</Button>
-          <Button>Publish Updates</Button>
+        <div className="flex flex-wrap gap-3">
+          <Link
+            href={`/gigs/${id}`}
+            className="inline-flex items-center justify-center rounded-xl border border-white/10 bg-surface-high px-5 py-2.5 text-sm font-medium text-foreground transition hover:bg-surface-ink"
+          >
+            View public gig page
+          </Link>
         </div>
       </section>
 
@@ -84,7 +82,7 @@ export default async function EventPage({ params }: EventPageProps) {
         {["Lineup", "Applications", "Guest List", "Promo Tracker", "Budget", "Run of Show"].map((tab, index) => (
           <button
             key={tab}
-            className={`whitespace-nowrap border-b-2 px-5 py-4 text-sm ${index === 0 ? "border-primary text-primary" : "border-transparent text-muted"}`}
+            className={`whitespace-nowrap border-b-2 px-5 py-4 text-sm ${index === 1 ? "border-primary text-primary" : "border-transparent text-muted"}`}
             type="button"
           >
             {tab}
@@ -131,11 +129,11 @@ export default async function EventPage({ params }: EventPageProps) {
           </div>
         </div>
 
-        <div className="panel p-6 xl:col-span-7">
-          <EventApplications applications={applications} gigId={gig.id} />
+        <div className="panel p-6 xl:col-span-12">
+          <EventApplications applications={applications} slotNames={slotNames} />
         </div>
 
-        <div className="panel p-6 xl:col-span-5">
+        <div className="panel p-6 xl:col-span-12">
           <h2 className="font-display text-2xl font-semibold">Run of show</h2>
           <div className="mt-6 space-y-3">
             {gig.slots.map((slot) => (

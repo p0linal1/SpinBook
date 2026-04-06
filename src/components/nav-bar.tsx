@@ -7,15 +7,14 @@ import { ArrowRightIcon } from "@/components/landing/arrow-right";
 
 const marketingLinks = [
   { href: "/#how-it-works", label: "How it works" },
-  { href: "/#for-djs", label: "For DJs" },
-  { href: "/#for-venues", label: "For Venues" },
+  { href: "/#features", label: "Features" },
   { href: "/#pricing", label: "Pricing" },
   { href: "/#faq", label: "FAQ" },
 ] as const;
 
 export function NavBar() {
   const { user, profile, loading, signOut } = useAuth();
-  const isPromoter = profile?.role === "promoter";
+  const canPostGig = profile?.role === "promoter" || profile?.role === "venue";
 
   const appLinks = user
     ? ([
@@ -23,7 +22,7 @@ export function NavBar() {
         { href: "/bookings", label: "Bookings" },
         { href: "/messages", label: "Messages" },
         { href: "/profile", label: "Profile" },
-        ...(isPromoter ? [{ href: "/post", label: "Post" }] as const : []),
+        ...(canPostGig ? [{ href: "/post", label: "Post" }] as const : []),
       ] as const)
     : [];
 

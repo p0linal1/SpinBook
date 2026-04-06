@@ -8,6 +8,8 @@ import type { Gig } from "@/types/gig";
 
 interface GigCardProps {
   gig: Gig;
+  /** When the current user posted this gig (promoter or venue). */
+  viewerIsOwner?: boolean;
 }
 
 const statusClasses = {
@@ -16,7 +18,7 @@ const statusClasses = {
   URGENT: "bg-danger/15 text-danger",
 };
 
-export function GigCard({ gig }: GigCardProps) {
+export function GigCard({ gig, viewerIsOwner = false }: GigCardProps) {
   return (
     <article className="panel group flex h-full flex-col overflow-hidden transition hover:-translate-y-1 hover:border-primary/40">
       <div className="h-1 w-full bg-gradient-to-r from-primary via-secondary to-tertiary opacity-70" />
@@ -58,9 +60,15 @@ export function GigCard({ gig }: GigCardProps) {
           <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted">
             {gig.applicantCount} applied · {gig.remainingSlots} slot remaining
           </p>
-          <Link className={buttonClasses("primary", "md", "min-w-28")} href={`/gigs/${gig.id}`}>
-            Apply
-          </Link>
+          {viewerIsOwner ? (
+            <Link className={buttonClasses("primary", "md", "min-w-28")} href={`/event/${gig.id}`}>
+              Manage
+            </Link>
+          ) : (
+            <Link className={buttonClasses("primary", "md", "min-w-28")} href={`/gigs/${gig.id}`}>
+              Apply
+            </Link>
+          )}
         </div>
       </div>
     </article>

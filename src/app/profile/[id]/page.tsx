@@ -60,7 +60,17 @@ export default async function PublicProfilePage({ params }: PublicProfilePagePro
     <div className="space-y-8">
       <section className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="panel overflow-hidden bg-hero-grid p-8">
-          <p className="eyebrow">Public {profile.role === "media" ? "Media" : profile.role === "promoter" ? "Promoter" : "DJ"} Profile</p>
+          <p className="eyebrow">
+            Public{" "}
+            {profile.role === "media"
+              ? "Media"
+              : profile.role === "promoter"
+                ? "Promoter"
+                : profile.role === "venue"
+                  ? "Venue"
+                  : "DJ"}{" "}
+            Profile
+          </p>
           <h1 className="mt-3 font-display text-6xl font-semibold tracking-[-0.06em]">
             {user.displayName}
           </h1>

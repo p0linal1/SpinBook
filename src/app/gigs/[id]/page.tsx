@@ -1,7 +1,9 @@
 import { notFound } from "next/navigation";
 import { ApplyModal } from "@/components/apply-modal";
+import { GigHostPanel } from "@/components/gig-host-panel";
 import { GigSlot } from "@/components/gig-slot";
 import { RatingStars } from "@/components/rating-stars";
+import { getApplicationCountsByGigIds } from "@/lib/gig-applications";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { featuredGigs, promoterProfile } from "@/lib/mock-data";
 import { formatDate } from "@/lib/utils";
@@ -16,8 +18,11 @@ export default async function GigDetailPage({ params }: GigDetailPageProps) {
 
   let gig: Gig | null = null;
   let promoter: { displayName: string; bio: string; rating: number } | null = null;
+  let applicationCounts = { total: 0, pending: 0 };
 
   const supabase = await createSupabaseServerClient();
+  const { data: { user } } = supabase ? await supabase.auth.getUser() : { data: { user: null } };
+
   if (supabase) {
     const { data: dbGig } = await supabase.from("gigs").select("*").eq("id", id).single();
     if (dbGig) {
@@ -30,6 +35,9 @@ export default async function GigDetailPage({ params }: GigDetailPageProps) {
         djName: s.assigned_user_name ?? undefined, dj_id: s.assigned_user_id ?? undefined,
       }));
 
+      const countMap = await getApplicationCountsByGigIds(supabase, [dbGig.id]);
+      applicationCounts = countMap.get(dbGig.id) ?? { total: 0, pending: 0 };
+
       gig = {
         id: dbGig.id, eventName: dbGig.event_name, venueName: dbGig.venue_name,
         city: dbGig.city, promoterName: dbPromoter?.display_name ?? "Unknown",
@@ -37,7 +45,7 @@ export default async function GigDetailPage({ params }: GigDetailPageProps) {
         address: dbGig.address, status: dbGig.status as Gig["status"],
         genres: dbGig.genres ?? [], tags: dbGig.tags ?? [],
         description: dbGig.description, equipment: dbGig.equipment,
-        promoExpectation: dbGig.promo_expectation, applicantCount: 0,
+        promoExpectation: dbGig.promo_expectation, applicantCount: applicationCounts.total,
         remainingSlots: slots.filter((s) => s.status === "open").length, slots,
       };
 
@@ -53,73 +61,87 @@ export default async function GigDetailPage({ params }: GigDetailPageProps) {
     if (!mockGig) notFound();
     gig = mockGig!;
     promoter = { displayName: promoterProfile.displayName, bio: promoterProfile.bio, rating: promoterProfile.rating };
+    applicationCounts = { total: gig.applicantCount, pending: 0 };
   }
 
   if (!promoter) {
     promoter = { displayName: gig.promoterName, bio: "", rating: 0 };
   }
 
+  const isHost = Boolean(user && gig.promoter_id === user.id);
+
   return (
-    <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
-      <section className="space-y-6">
-        <div className="panel p-8">
-          <p className="eyebrow">Gig Detail</p>
-          <h1 className="mt-2 font-display text-4xl font-semibold tracking-[-0.04em]">
-            {gig.eventName}
-          </h1>
-          <div className="mt-5 grid gap-4 text-sm text-muted md:grid-cols-3">
-            <div>
-              <p className="eyebrow">Venue</p>
-              <p className="mt-2 text-foreground">{gig.venueName}</p>
+    <div className="space-y-8">
+      {isHost && (
+        <GigHostPanel
+          gigId={gig.id}
+          eventName={gig.eventName}
+          totalApplications={applicationCounts.total}
+          pendingApplications={applicationCounts.pending}
+        />
+      )}
+
+      <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
+        <section className="space-y-6">
+          <div className="panel p-8">
+            <p className="eyebrow">Gig Detail</p>
+            <h1 className="mt-2 font-display text-4xl font-semibold tracking-[-0.04em]">
+              {gig.eventName}
+            </h1>
+            <div className="mt-5 grid gap-4 text-sm text-muted md:grid-cols-3">
+              <div>
+                <p className="eyebrow">Venue</p>
+                <p className="mt-2 text-foreground">{gig.venueName}</p>
+              </div>
+              <div>
+                <p className="eyebrow">Date</p>
+                <p className="mt-2 text-foreground">{formatDate(gig.date)}</p>
+              </div>
+              <div>
+                <p className="eyebrow">Address</p>
+                <p className="mt-2 text-foreground">{gig.address}</p>
+              </div>
             </div>
-            <div>
-              <p className="eyebrow">Date</p>
-              <p className="mt-2 text-foreground">{formatDate(gig.date)}</p>
-            </div>
-            <div>
-              <p className="eyebrow">Address</p>
-              <p className="mt-2 text-foreground">{gig.address}</p>
+
+            <div className="mt-8 space-y-5">
+              <div>
+                <p className="eyebrow">Description</p>
+                <p className="mt-3 max-w-3xl text-base leading-7 text-muted">{gig.description}</p>
+              </div>
+              <div>
+                <p className="eyebrow">Equipment</p>
+                <p className="mt-3 text-base leading-7 text-muted">{gig.equipment}</p>
+              </div>
+              <div>
+                <p className="eyebrow">Promotion expectations</p>
+                <p className="mt-3 text-base leading-7 text-muted">{gig.promoExpectation}</p>
+              </div>
             </div>
           </div>
 
-          <div className="mt-8 space-y-5">
-            <div>
-              <p className="eyebrow">Description</p>
-              <p className="mt-3 max-w-3xl text-base leading-7 text-muted">{gig.description}</p>
-            </div>
-            <div>
-              <p className="eyebrow">Equipment</p>
-              <p className="mt-3 text-base leading-7 text-muted">{gig.equipment}</p>
-            </div>
-            <div>
-              <p className="eyebrow">Promotion expectations</p>
-              <p className="mt-3 text-base leading-7 text-muted">{gig.promoExpectation}</p>
+          <div className="panel p-6">
+            <p className="eyebrow mb-4">Slots</p>
+            <div className="space-y-3">
+              {gig.slots.map((slot) => (
+                <GigSlot key={slot.id} slot={slot} />
+              ))}
             </div>
           </div>
-        </div>
+        </section>
 
-        <div className="panel p-6">
-          <p className="eyebrow mb-4">Slots</p>
-          <div className="space-y-3">
-            {gig.slots.map((slot) => (
-              <GigSlot key={slot.id} slot={slot} />
-            ))}
+        <aside className="space-y-6">
+          <div className="panel p-6">
+            <p className="eyebrow">{isHost ? "Host" : "Promoter"}</p>
+            <h2 className="mt-2 font-display text-2xl font-semibold">{promoter.displayName}</h2>
+            <p className="mt-2 text-sm text-muted">{promoter.bio}</p>
+            <div className="mt-4">
+              <RatingStars rating={promoter.rating} />
+            </div>
           </div>
-        </div>
-      </section>
 
-      <aside className="space-y-6">
-        <div className="panel p-6">
-          <p className="eyebrow">Promoter</p>
-          <h2 className="mt-2 font-display text-2xl font-semibold">{promoter.displayName}</h2>
-          <p className="mt-2 text-sm text-muted">{promoter.bio}</p>
-          <div className="mt-4">
-            <RatingStars rating={promoter.rating} />
-          </div>
-        </div>
-
-        <ApplyModal gig={gig} />
-      </aside>
+          {!isHost && <ApplyModal gig={gig} />}
+        </aside>
+      </div>
     </div>
   );
 }
