@@ -1,8 +1,5 @@
 import { NextResponse } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import type { Database } from "@/types/database";
-
-type ApplicationsUpdate = Database["public"]["Tables"]["applications"]["Update"];
 
 interface RouteContext {
   params: Promise<{ id: string }>;
@@ -42,8 +39,7 @@ export async function PATCH(request: Request, context: RouteContext) {
     const sb = await createSupabaseServerClient();
     if (!sb) return NextResponse.json({ error: "Not configured" }, { status: 500 });
 
-    const patch: ApplicationsUpdate = { status: "rejected" };
-    const { error } = await sb.from("applications").update(patch).eq("id", id);
+    const { error } = await sb.from("applications").update({ status: "rejected" }).eq("id", id);
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });

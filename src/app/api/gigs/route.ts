@@ -17,7 +17,7 @@ export async function GET(request: Request) {
 
   if (city) query = query.eq("city", city);
   if (genre) query = query.contains("genres", [genre]);
-  if (status) query = query.eq("status", status);
+  if (status) query = query.eq("status", status as "OPEN" | "FILLED" | "URGENT");
 
   const { data: gigs, error } = await query;
 

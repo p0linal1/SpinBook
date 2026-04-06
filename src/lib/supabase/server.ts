@@ -1,8 +1,13 @@
 import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/types/database";
 
-export async function createSupabaseServerClient() {
+/**
+ * Hand-written `Database` types do not satisfy `GenericSchema` in recent @supabase/ssr + postgrest-js,
+ * which would infer `never` for `.insert()` / `.update()`. Cast through `unknown` so the client API types correctly.
+ */
+export async function createSupabaseServerClient(): Promise<SupabaseClient<Database> | null> {
   const cookieStore = await cookies();
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -11,7 +16,7 @@ export async function createSupabaseServerClient() {
     return null;
   }
 
-  return createServerClient<Database>(url, anonKey, {
+  const client = createServerClient<Database>(url, anonKey, {
     cookies: {
       getAll() {
         return cookieStore.getAll();
@@ -28,4 +33,5 @@ export async function createSupabaseServerClient() {
       },
     },
   });
+  return client as unknown as SupabaseClient<Database>;
 }
