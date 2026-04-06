@@ -223,6 +223,11 @@ CREATE POLICY "Involved parties can update contracts"
     auth.uid() = dj_id OR auth.uid() = promoter_id
   );
 
+-- Add FK from bookings.contract_id -> contracts (must be after contracts table is created)
+ALTER TABLE public.bookings
+  ADD CONSTRAINT bookings_contract_id_fkey
+  FOREIGN KEY (contract_id) REFERENCES public.contracts(id);
+
 -- RPC: Accept application atomically
 CREATE OR REPLACE FUNCTION public.accept_application(
   p_application_id uuid,
