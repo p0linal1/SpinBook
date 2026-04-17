@@ -28,7 +28,7 @@ export function NavBar() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-black/85 backdrop-blur-xl">
-      <div className="mx-auto grid max-w-7xl grid-cols-[auto_1fr_auto] items-center gap-4 px-6 py-4">
+      <div className="mx-auto grid max-w-7xl grid-cols-[1fr_auto_1fr] items-center gap-4 px-6 py-4">
           <Link className="shrink-0 flex items-center gap-2 font-display text-xl font-bold tracking-[-0.04em] text-white" href="/">
             <img src="/logo.svg" alt="SpinBook logo" className="h-10 w-10" />
             SpinBook
@@ -54,7 +54,7 @@ export function NavBar() {
             ))}
           </nav>
 
-        <div className="flex shrink-0 items-center gap-3">
+        <div className="flex shrink-0 items-center justify-end gap-3">
           {loading ? null : user && profile ? (
             <>
               <button
