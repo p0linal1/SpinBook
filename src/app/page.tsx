@@ -172,7 +172,7 @@ export default async function HomePage() {
       <div className="my-16 border-t border-white/[0.06] pt-16" />
 
       <section className="space-y-10">
-        <div className="panel overflow-hidden bg-hero-grid p-8">
+        <div className="panel overflow-hidden p-8">
           <div>
             <p className="eyebrow">Gigs Feed</p>
             <h2 className="mt-3 max-w-3xl font-display text-4xl font-semibold tracking-[-0.05em] text-foreground md:text-5xl">

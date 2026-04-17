@@ -28,12 +28,12 @@ export function NavBar() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-black/85 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-6 py-4">
-        <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-8 gap-y-3">
-          <Link className="shrink-0 font-display text-xl font-bold tracking-[-0.04em] text-white" href="/">
+      <div className="mx-auto grid max-w-7xl grid-cols-[auto_1fr_auto] items-center gap-4 px-6 py-4">
+          <Link className="shrink-0 flex items-center gap-2 font-display text-xl font-bold tracking-[-0.04em] text-white" href="/">
+            <img src="/logo.svg" alt="SpinBook logo" className="h-10 w-10" />
             SpinBook
           </Link>
-          <nav className="hidden flex-wrap items-center gap-x-6 gap-y-2 md:flex">
+          <nav className="hidden flex-wrap items-center justify-center gap-x-6 gap-y-2 md:flex">
             {marketingLinks.map((item) => (
               <Link
                 key={item.href}
@@ -53,7 +53,6 @@ export function NavBar() {
               </Link>
             ))}
           </nav>
-        </div>
 
         <div className="flex shrink-0 items-center gap-3">
           {loading ? null : user && profile ? (
