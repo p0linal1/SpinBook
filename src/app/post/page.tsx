@@ -85,21 +85,27 @@ export default function PostGigPage() {
       return;
     }
 
-    router.push(`/gigs/${json.data.id}`);
+    router.push(`/event/${json.data.id}`);
   }
 
-  if (profile?.role !== "promoter") {
+  const isHost = profile?.role === "promoter" || profile?.role === "venue";
+  if (!isHost) {
     return (
       <div className="panel p-8 text-center">
-        <p className="text-muted">Only promoters can post gigs.</p>
+        <p className="text-muted">Only promoters and venues can post gigs.</p>
+        <p className="mt-3 text-sm text-muted">
+          Sign up as a venue or promoter, or switch your role in your profile settings if your account supports it.
+        </p>
       </div>
     );
   }
 
+  const hostLabel = profile?.role === "venue" ? "Venue" : "Promoter";
+
   return (
     <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
       <section className="panel p-8">
-        <p className="eyebrow">Promoter View</p>
+        <p className="eyebrow">{hostLabel}</p>
         <h1 className="mt-2 font-display text-4xl font-semibold">Post a new gig</h1>
 
         {error && (

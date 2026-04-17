@@ -39,10 +39,7 @@ export async function PATCH(request: Request, context: RouteContext) {
     const sb = await createSupabaseServerClient();
     if (!sb) return NextResponse.json({ error: "Not configured" }, { status: 500 });
 
-    const { error } = await sb
-      .from("applications")
-      .update({ status: "rejected" })
-      .eq("id", id);
+    const { error } = await sb.from("applications").update({ status: "rejected" }).eq("id", id);
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 500 });

@@ -8,6 +8,8 @@ import type { Gig } from "@/types/gig";
 
 interface GigCardProps {
   gig: Gig;
+  /** When the current user posted this gig (promoter or venue). */
+  viewerIsOwner?: boolean;
 }
 
 const statusClasses = {
@@ -16,7 +18,7 @@ const statusClasses = {
   URGENT: "bg-error text-on-error",
 };
 
-export function GigCard({ gig }: GigCardProps) {
+export function GigCard({ gig, viewerIsOwner = false }: GigCardProps) {
   return (
     <article className="bg-surface-container group rounded-xl overflow-hidden border border-outline-variant/10 hover:border-primary/30 transition-all flex flex-col">
       <div className="h-48 relative overflow-hidden">
@@ -60,17 +62,19 @@ export function GigCard({ gig }: GigCardProps) {
           ))}
         </div>
 
-        <div className="mt-auto pt-4 flex items-center justify-between border-t border-outline-variant/10">
-          <span className="text-[10px] text-on-surface-variant mono-data uppercase">
-            {gig.applicantCount} Applicants
-          </span>
-          <Link 
-            href={`/gigs/${gig.id}`}
-            className="kinetic-gradient text-on-primary px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-widest flex items-center gap-2 group-hover:shadow-[0_0_20px_rgba(0,255,135,0.3)] transition-all"
-          >
-            Apply
-            <span className="material-symbols-outlined text-sm">arrow_forward</span>
-          </Link>
+        <div className="mt-auto flex items-center justify-between gap-4 border-t border-white/10 pt-4">
+          <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted">
+            {gig.applicantCount} applied
+          </p>
+          {viewerIsOwner ? (
+            <Link className={buttonClasses("primary", "md", "min-w-28")} href={`/event/${gig.id}`}>
+              Manage
+            </Link>
+          ) : (
+            <Link className={buttonClasses("primary", "md", "min-w-28")} href={`/gigs/${gig.id}`}>
+              Apply
+            </Link>
+          )}
         </div>
       </div>
     </article>

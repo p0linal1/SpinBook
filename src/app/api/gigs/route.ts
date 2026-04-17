@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { canPostGigs, getProfileRole } from "@/lib/supabase/profile-role";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export async function GET(request: Request) {
@@ -16,7 +17,7 @@ export async function GET(request: Request) {
 
   if (city) query = query.eq("city", city);
   if (genre) query = query.contains("genres", [genre]);
-  if (status) query = query.eq("status", status);
+  if (status) query = query.eq("status", status as "OPEN" | "FILLED" | "URGENT");
 
   const { data: gigs, error } = await query;
 
@@ -91,9 +92,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const role = user.user_metadata?.role;
-  if (role !== "promoter") {
-    return NextResponse.json({ error: "Only promoters can post gigs" }, { status: 403 });
+  const role = await getProfileRole(supabase, user.id, user.user_metadata?.role as string | undefined);
+  if (!canPostGigs(role)) {
+    return NextResponse.json({ error: "Only promoters and venues can post gigs" }, { status: 403 });
   }
 
   const body = await request.json();

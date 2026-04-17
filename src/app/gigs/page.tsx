@@ -1,5 +1,6 @@
 import { GigCard } from "@/components/gig-card";
 import { cities, genres } from "@/lib/constants";
+import { enrichGigsWithApplicationCounts } from "@/lib/gig-applications";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { featuredGigs } from "@/lib/mock-data";
 import type { Gig } from "@/types/gig";
@@ -39,6 +40,13 @@ export default async function GigsPage() {
 
   // Fall back to mock data if no DB gigs
   if (gigs.length === 0) gigs = featuredGigs;
+
+  let viewerId: string | null = null;
+  if (supabase) {
+    const { data: { user } } = await supabase.auth.getUser();
+    viewerId = user?.id ?? null;
+    gigs = await enrichGigsWithApplicationCounts(supabase, gigs);
+  }
 
   return (
     <div className="grid gap-8 lg:grid-cols-[280px_1fr]">
@@ -99,7 +107,11 @@ export default async function GigsPage() {
 
         <div className="grid gap-6 xl:grid-cols-2">
           {gigs.map((gig) => (
-            <GigCard key={gig.id} gig={gig} />
+            <GigCard
+              key={gig.id}
+              gig={gig}
+              viewerIsOwner={Boolean(viewerId && viewerId === gig.promoter_id)}
+            />
           ))}
         </div>
       </section>

@@ -29,7 +29,12 @@ export async function getAuthContext(request: NextRequest) {
     },
   });
 
-  const { data: { user } } = await supabase.auth.getUser();
+  let user;
+  try {
+    ({ data: { user } } = await supabase.auth.getUser());
+  } catch {
+    return { user: null, role: null, authenticated: false, response };
+  }
 
   if (!user) {
     return { user: null, role: null, authenticated: false, response };
